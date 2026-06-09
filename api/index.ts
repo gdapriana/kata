@@ -1,8 +1,22 @@
 import express, { type Request, type Response } from "express";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import yaml from "yaml";
 
 const app = express();
 
 app.use(express.json());
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const OPENAPI_PATH = path.resolve(__dirname, "../openapi/openapi.yaml");
+
+function loadOpenApi() {
+  const raw = fs.readFileSync(OPENAPI_PATH, "utf-8");
+  return yaml.parse(raw);
+}
+
+const openApiDocument = loadOpenApi();
 
 app.get("/", (_req: Request, res: Response) => {
   res.json({ message: "Hello from kata server" });
@@ -10,6 +24,36 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok" });
+});
+
+app.get("/api", (_req: Request, res: Response) => {
+  res.json(openApiDocument);
+});
+
+app.get("/api/openapi.yaml", (_req: Request, res: Response) => {
+  res.type("application/yaml").send(fs.readFileSync(OPENAPI_PATH, "utf-8"));
+});
+
+app.get("/api/docs", (_req: Request, res: Response) => {
+  const specUrl = "/api";
+  res.type("html").send(`<!doctype html>
+<html>
+  <head>
+    <title>${openApiDocument.info?.title ?? "API"} – Docs</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin></script>
+    <script>
+      window.onload = () => {
+        window.ui = SwaggerUIBundle({ url: "${specUrl}", dom_id: "#swagger-ui" });
+      };
+    </script>
+  </body>
+</html>`);
 });
 
 const PORT = process.env.PORT || 3000;

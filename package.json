@@ -7,10 +7,11 @@
     "dev": "bun run --watch api/index.ts",
     "start": "bun run api/index.ts",
     "typecheck": "tsc --noEmit",
-    "openapi:validate": "bun run openapi/validate.ts openapi/openapi.yaml"
+    "openapi:validate": "bun openapi/validate.ts openapi/openapi.yaml"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^12.1.0",
