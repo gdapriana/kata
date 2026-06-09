@@ -1,0 +1,535 @@
+openapi: 3.1.0
+info:
+  title: Kata Blog API
+  version: 0.1.0
+  summary: REST API for the Kata blog application
+  description: |
+    HTTP API for managing blog posts and their comments. Backed by PostgreSQL
+    via Prisma in production; the contract defined here is the source of truth
+    for clients and server-side handlers.
+
+    All endpoints are mounted under the `/api` prefix. Authentication uses
+    Bearer tokens (documented here; full JWT wiring arrives in a later step).
+  contact:
+    name: Kata
+  license:
+    name: MIT
+    identifier: MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development
+  - url: https://kata.vercel.app/api
+    description: Vercel deployment (replace with your domain)
+
+tags:
+  - name: Posts
+    description: Blog post CRUD
+  - name: Comments
+    description: Comments nested under posts
+  - name: System
+    description: Health and metadata
+
+paths:
+  /health:
+    get:
+      tags: [System]
+      summary: Health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+
+  /posts:
+    get:
+      tags: [Posts]
+      summary: List blog posts
+      operationId: listPosts
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/PostStatus"
+          description: Filter by post status
+        - in: query
+          name: tag
+          schema:
+            type: string
+          description: Filter by a single tag
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Case-insensitive search across title and content
+        - in: query
+          name: authorId
+          schema:
+            type: string
+          description: Filter by author
+      responses:
+        "200":
+          description: Paginated list of posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+    post:
+      tags: [Posts]
+      summary: Create a post
+      operationId: createPost
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostCreate"
+      responses:
+        "201":
+          description: Post created
+          headers:
+            Location:
+              description: URL of the new post
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /posts/{postId}:
+    parameters:
+      - $ref: "#/components/parameters/PostIdParam"
+
+    get:
+      tags: [Posts]
+      summary: Get a single post
+      operationId: getPost
+      responses:
+        "200":
+          description: The post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    patch:
+      tags: [Posts]
+      summary: Update a post
+      operationId: updatePost
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUpdate"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [Posts]
+      summary: Delete a post
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Post deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /posts/{postId}/comments:
+    parameters:
+      - $ref: "#/components/parameters/PostIdParam"
+
+    get:
+      tags: [Comments]
+      summary: List comments for a post
+      operationId: listComments
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Paginated list of comments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentListResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    post:
+      tags: [Comments]
+      summary: Add a comment to a post
+      operationId: createComment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreate"
+      responses:
+        "201":
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /posts/{postId}/comments/{commentId}:
+    parameters:
+      - $ref: "#/components/parameters/PostIdParam"
+      - $ref: "#/components/parameters/CommentIdParam"
+
+    delete:
+      tags: [Comments]
+      summary: Delete a comment
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Comment deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Bearer token issued by the auth service. The full auth flow is wired
+        in a later step; this spec declares the contract so write endpoints
+        are protected.
+
+  parameters:
+    PostIdParam:
+      in: path
+      name: postId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CommentIdParam:
+      in: path
+      name: commentId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PageParam:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: 1-indexed page number
+    LimitParam:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Items per page
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ValidationError:
+      description: Request body failed validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        uptime:
+          type: number
+          description: Process uptime in seconds
+
+    PostStatus:
+      type: string
+      enum: [draft, published, archived]
+
+    Post:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - status
+        - authorId
+        - authorName
+        - tags
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        content:
+          type: string
+        excerpt:
+          type: string
+          maxLength: 500
+        status:
+          $ref: "#/components/schemas/PostStatus"
+        authorId:
+          type: string
+          format: uuid
+        authorName:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PostCreate:
+      type: object
+      required: [title, content]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          description: Optional. Auto-generated from title if omitted.
+        content:
+          type: string
+        excerpt:
+          type: string
+          maxLength: 500
+        status:
+          $ref: "#/components/schemas/PostStatus"
+        tags:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    PostUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        content:
+          type: string
+        excerpt:
+          type: string
+          maxLength: 500
+        status:
+          $ref: "#/components/schemas/PostStatus"
+        tags:
+          type: array
+          items:
+            type: string
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    PostListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+    Comment:
+      type: object
+      required:
+        - id
+        - postId
+        - author
+        - content
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        postId:
+          type: string
+          format: uuid
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+        content:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        createdAt:
+          type: string
+          format: date-time
+
+    CommentCreate:
+      type: object
+      required: [author, content]
+      properties:
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+        content:
+          type: string
+          minLength: 1
+          maxLength: 5000
+
+    CommentListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+    Pagination:
+      type: object
+      required: [page, limit, total, totalPages]
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              example: POST_NOT_FOUND
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: object
+              additionalProperties: true
+              description: Optional field-level validation details
