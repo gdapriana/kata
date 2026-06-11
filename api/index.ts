@@ -1,11 +1,23 @@
+import { toNodeHandler } from "better-auth/node";
 import express, { type Request, type Response } from "express";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "yaml";
+import { auth } from "../lib/auth";
+import cors from "cors";
+import blogRouter from "./routes/blog.routes";
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  }),
+);
 
+app.all("/api/auth/*", toNodeHandler(auth));
 app.use(express.json());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +46,8 @@ app.get("/api/openapi.yaml", (_req: Request, res: Response) => {
   res.type("application/yaml").send(fs.readFileSync(OPENAPI_PATH, "utf-8"));
 });
 
+app.use("/api/blogs", blogRouter);
+
 app.get("/api/docs", (_req: Request, res: Response) => {
   const specUrl = "/api";
   res.type("html").send(`<!doctype html>
@@ -54,6 +68,16 @@ app.get("/api/docs", (_req: Request, res: Response) => {
     </script>
   </body>
 </html>`);
+});
+
+app.use((error: unknown, _req: Request, res: Response, _next: express.NextFunction) => {
+  console.error(error);
+  res.status(500).json({
+    error: {
+      code: "INTERNAL_ERROR",
+      message: "Unexpected server error",
+    },
+  });
 });
 
 const PORT = process.env.PORT || 3000;

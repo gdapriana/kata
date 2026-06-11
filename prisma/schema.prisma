@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  role           UserRole  @default(user)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  blogs          Blog[]    @relation("BlogAuthor")
+  uploadedImages Image[]   @relation("ImageUploader")
+  likedBlogs     Blog[]    @relation("BlogLikes")
+  favoritedBlogs Blog[]    @relation("BlogFavorites")
+
+  @@unique([email])
+  @@index([role])
+  @@index([createdAt])
+  @@map("user")
+}
+
+model Blog {
+  id              String     @id @default(uuid())
+  title           String
+  slug            String     @unique
+  content         String     @db.Text
+  excerpt         String?    @db.Text
+  status          BlogStatus @default(draft)
+  authorId        String
+  categoryId      String
+  featuredImageId String?
+  publishedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  author           User     @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  category         Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  featuredImage    Image?   @relation("FeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  galleryImages    Image[]  @relation("BlogGalleryImages")
+  tags             Tag[]    @relation("BlogTags")
+  likedByUsers     User[]   @relation("BlogLikes")
+  favoritedByUsers User[]   @relation("BlogFavorites")
+
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([featuredImageId])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("blog")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  parentId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  blogs    Blog[]
+
+  @@index([name])
+  @@index([parentId])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("category")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  blogs Blog[] @relation("BlogTags")
+
+  @@index([name])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("tag")
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  name       String?
+  alt        String?
+  url        String
+  mimeType   String
+  size       Int
+  width      Int?
+  height     Int?
+  uploaderId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  uploader        User   @relation("ImageUploader", fields: [uploaderId], references: [id], onDelete: Restrict)
+  featuredInBlogs Blog[] @relation("FeaturedImage")
+  galleryBlogs    Blog[] @relation("BlogGalleryImages")
+
+  @@index([name])
+  @@index([uploaderId])
+  @@index([mimeType])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("image")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum UserRole {
+  user
+  author
+  editor
+  admin
+}
+
+enum BlogStatus {
+  draft
+  published
+  archived
+}
