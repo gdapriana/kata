@@ -7,6 +7,8 @@ import yaml from "yaml";
 import { auth } from "../lib/auth";
 import cors from "cors";
 import blogRouter from "./routes/blog.routes";
+import categoryRouter from "./routes/category.routes";
+import tagRouter from "./routes/tag.routes";
 
 const app = express();
 app.use(
@@ -47,6 +49,8 @@ app.get("/api/openapi.yaml", (_req: Request, res: Response) => {
 });
 
 app.use("/api/blogs", blogRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/tags", tagRouter);
 
 app.get("/api/docs", (_req: Request, res: Response) => {
   const specUrl = "/api";
