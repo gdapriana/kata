@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Kata Blog API
-  version: 0.2.0
+  version: 0.2.2
   summary: REST API for the Kata blog application
   description: |
     HTTP API for the Kata blog platform. Manages users, blog posts, categories,
@@ -11,6 +11,9 @@ info:
       - **Get one**: `GET /{resource}/get?by=id|slug&value=...`
       - **List**:   `GET /{resource}/query?sort=...&order=asc|desc&...`
       - **Auth**:   Bearer JWT on all write/delete endpoints.
+      - **Images**: Looked up by `id` only. Upload via `multipart/form-data` to
+        Cloudinary — single file at `POST /images`, up to 10 files at
+        `POST /images/bulk`.
 
     Backed by PostgreSQL via Prisma in production; this spec is the source of
     truth for handlers and clients.
@@ -38,7 +41,9 @@ tags:
   - name: Tags
     description: Free-form tags (many per blog)
   - name: Images
-    description: Image records (featured + gallery)
+    description: |
+      Images uploaded to Cloudinary for featured images and blog galleries.
+      Write endpoints require the `author`, `editor`, or `admin` role.
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PATHS
@@ -621,8 +626,8 @@ paths:
       summary: Get a single image
       operationId: getImage
       parameters:
-        - $ref: "#/components/parameters/ByParam"
-        - $ref: "#/components/parameters/ValueParam"
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
       responses:
         "200":
           description: The image
@@ -630,6 +635,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Image"
+        "400":
+          $ref: "#/components/responses/ValidationError"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -670,25 +677,72 @@ paths:
               schema:
                 $ref: "#/components/schemas/ImageListResponse"
 
-  /images:
+  /images/bulk:
     post:
       tags: [Images]
-      summary: Register an uploaded image
+      summary: Upload multiple images
       description: |
-        Records metadata for an image already uploaded to storage (e.g. S3,
-        Cloudflare R2). The upload itself is out of scope for this endpoint.
-      operationId: createImage
+        Uploads up to 10 image files to Cloudinary and stores their metadata in
+        the database. Requires the `author`, `editor`, or `admin` role. The
+        `uploaderId` is taken from the authenticated session.
+
+        If any file fails validation or upload, the entire request is rolled
+        back and no images are saved.
+
+        Accepted file types: JPEG, PNG, WebP, GIF. Maximum file size per file:
+        10 MB.
+      operationId: uploadImages
       security:
         - bearerAuth: []
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/ImageCreate"
+              $ref: "#/components/schemas/ImageBulkUpload"
       responses:
         "201":
-          description: Image registered
+          description: Images uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageBulkUploadResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "502":
+          description: Cloudinary upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /images:
+    post:
+      tags: [Images]
+      summary: Upload a single image
+      description: |
+        Uploads one image file to Cloudinary and stores its metadata in the
+        database. The `uploaderId` is taken from the authenticated session.
+
+        For multiple files in one request, use `POST /images/bulk` instead.
+
+        Accepted file types: JPEG, PNG, WebP, GIF. Maximum file size: 10 MB.
+      operationId: uploadImage
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ImageUpload"
+      responses:
+        "201":
+          description: Image uploaded
           content:
             application/json:
               schema:
@@ -697,16 +751,27 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "502":
+          description: Cloudinary upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
     patch:
       tags: [Images]
       summary: Update image metadata
+      description: |
+        Updates optional display metadata. Requires the `author`, `editor`, or
+        `admin` role.
       operationId: updateImage
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/ByParam"
-        - $ref: "#/components/parameters/ValueParam"
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
       requestBody:
         required: true
         content:
@@ -724,25 +789,38 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
 
     delete:
       tags: [Images]
-      summary: Delete an image record
+      summary: Delete an image
+      description: |
+        Deletes the image from Cloudinary and removes its database record.
+        Requires the `author`, `editor`, or `admin` role.
       operationId: deleteImage
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/ByParam"
-        - $ref: "#/components/parameters/ValueParam"
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
       responses:
         "204":
           description: Image deleted
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+        "502":
+          description: Cloudinary delete failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # COMPONENTS
@@ -775,6 +853,22 @@ components:
       description: |
         Value of the lookup field. UUID when `by=id`, slug string when
         `by=slug`.
+    IdByParam:
+      in: query
+      name: by
+      required: true
+      schema:
+        type: string
+        enum: [id]
+      description: Images are looked up by id only
+    IdValueParam:
+      in: query
+      name: value
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Image UUID
     SortParam:
       in: query
       name: sort
@@ -807,6 +901,12 @@ components:
   responses:
     Unauthorized:
       description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Authenticated user lacks the required role
       content:
         application/json:
           schema:
@@ -998,7 +1098,13 @@ components:
         id: { type: string, format: uuid }
         name: { type: string }
         alt: { type: string }
-        url: { type: string, format: uri }
+        url:
+          type: string
+          format: uri
+          description: Cloudinary secure URL
+        cloudinaryPublicId:
+          type: string
+          description: Cloudinary public ID used for storage cleanup on delete
         mimeType: { type: string, example: image/png }
         size: { type: integer, minimum: 0, description: Size in bytes }
         width: { type: integer, minimum: 0 }
@@ -1007,21 +1113,49 @@ components:
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
 
-    ImageCreate:
+    ImageUpload:
       type: object
-      required: [url, mimeType, size, uploaderId]
+      required: [file]
       properties:
-        name: { type: string }
-        alt: { type: string }
-        url: { type: string, format: uri }
-        mimeType: { type: string }
-        size: { type: integer, minimum: 0 }
-        width: { type: integer, minimum: 0 }
-        height: { type: integer, minimum: 0 }
-        uploaderId: { type: string, format: uuid }
+        file:
+          type: string
+          format: binary
+          description: Image file (JPEG, PNG, WebP, or GIF; max 10 MB)
+        name:
+          type: string
+          description: Optional display name (defaults to the original filename)
+        alt:
+          type: string
+          description: Optional alt text for accessibility
+
+    ImageBulkUpload:
+      type: object
+      required: [files]
+      properties:
+        files:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            format: binary
+          description: |
+            One or more image files. Repeat the `files` field for each upload
+            (JPEG, PNG, WebP, or GIF; max 10 MB each).
+
+    ImageBulkUploadResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/Image" }
+          description: Uploaded images, in the same order as the request files
 
     ImageUpdate:
       type: object
+      minProperties: 1
       properties:
         name: { type: string }
         alt: { type: string }

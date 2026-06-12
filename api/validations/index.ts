@@ -20,11 +20,11 @@ import {
   categoryUpdateSchema,
 } from "./category.validation";
 import {
-  imageCreateSchema,
   imageGetQuerySchema,
   imageMutationQuerySchema,
   imageQuerySchema,
   imageUpdateSchema,
+  imageUploadSchema,
 } from "./image.validation";
 import { tagCreateSchema, tagGetQuerySchema, tagMutationQuerySchema, tagQuerySchema, tagUpdateSchema } from "./tag.validation";
 import {
@@ -70,7 +70,7 @@ export const tagValidations = {
 export const imageValidations = {
   get: { query: imageGetQuerySchema },
   query: { query: imageQuerySchema },
-  create: { body: imageCreateSchema },
+  upload: { body: imageUploadSchema },
   update: { query: imageMutationQuerySchema, body: imageUpdateSchema },
   delete: { query: imageMutationQuerySchema },
 } as const;

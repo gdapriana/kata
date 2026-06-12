@@ -1,15 +1,9 @@
 import { z } from "zod";
-import { atLeastOneField, limitSchema, lookupQuerySchema, orderSchema, pageSchema, uriSchema, uuidSchema } from "./common.validation";
+import { atLeastOneField, idLookupQuerySchema, limitSchema, orderSchema, pageSchema, uuidSchema } from "./common.validation";
 
-export const imageCreateSchema = z.strictObject({
+export const imageUploadSchema = z.strictObject({
   name: z.string().optional(),
   alt: z.string().optional(),
-  url: uriSchema,
-  mimeType: z.string().min(1),
-  size: z.number().int().min(0),
-  width: z.number().int().min(0).optional(),
-  height: z.number().int().min(0).optional(),
-  uploaderId: uuidSchema,
 });
 
 export const imageUpdateSchema = atLeastOneField(
@@ -19,9 +13,9 @@ export const imageUpdateSchema = atLeastOneField(
   }),
 );
 
-export const imageGetQuerySchema = lookupQuerySchema;
+export const imageGetQuerySchema = idLookupQuerySchema;
 
-export const imageMutationQuerySchema = lookupQuerySchema;
+export const imageMutationQuerySchema = idLookupQuerySchema;
 
 export const imageQuerySchema = z.strictObject({
   sort: z.enum(["name", "createdAt", "updatedAt"]).optional(),
@@ -33,6 +27,6 @@ export const imageQuerySchema = z.strictObject({
   mimeType: z.string().optional(),
 });
 
-export type ImageCreateInput = z.infer<typeof imageCreateSchema>;
+export type ImageUploadInput = z.infer<typeof imageUploadSchema>;
 export type ImageUpdateInput = z.infer<typeof imageUpdateSchema>;
 export type ImageQueryInput = z.infer<typeof imageQuerySchema>;
