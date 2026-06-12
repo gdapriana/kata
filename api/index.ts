@@ -10,12 +10,27 @@ import blogRouter from "./routes/blog.routes";
 import categoryRouter from "./routes/category.routes";
 import tagRouter from "./routes/tag.routes";
 import imageRouter from "./routes/image.routes";
+import dashboardRouter from "./routes/dashboard.routes";
 
 const app = express();
+
+const allowedOrigins = [
+  process.env.CLIENT_URL ?? "http://localhost:3001",
+  process.env.BETTER_AUTH_URL ?? "http://localhost:3001",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   }),
 );
@@ -53,6 +68,7 @@ app.use("/api/blogs", blogRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/tags", tagRouter);
 app.use("/api/images", imageRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.get("/api/docs", (_req: Request, res: Response) => {
   const specUrl = "/api";

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Kata Blog API
-  version: 0.2.2
+  version: 0.3.0
   summary: REST API for the Kata blog application
   description: |
     HTTP API for the Kata blog platform. Manages users, blog posts, categories,
@@ -32,6 +32,8 @@ servers:
 tags:
   - name: System
     description: Health and metadata
+  - name: Dashboard
+    description: Admin-only platform statistics and overview
   - name: Users
     description: User accounts (Better Auth shape)
   - name: Blogs
@@ -62,6 +64,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Health"
+
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Get platform statistics
+      description: |
+        Returns aggregate counts and breakdowns across users, blogs, categories,
+        tags, images, and active sessions. Requires the `admin` role.
+      operationId: getDashboard
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Platform statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
   # ── Users ─────────────────────────────────────────────────────────────────
   /users/get:
@@ -941,6 +965,75 @@ components:
           enum: [ok]
         uptime:
           type: number
+
+    DashboardUserStats:
+      type: object
+      required: [total, byRole, emailVerified, emailUnverified]
+      properties:
+        total: { type: integer, minimum: 0 }
+        byRole:
+          type: object
+          required: [user, author, editor, admin]
+          properties:
+            user: { type: integer, minimum: 0 }
+            author: { type: integer, minimum: 0 }
+            editor: { type: integer, minimum: 0 }
+            admin: { type: integer, minimum: 0 }
+        emailVerified: { type: integer, minimum: 0 }
+        emailUnverified: { type: integer, minimum: 0 }
+
+    DashboardBlogStats:
+      type: object
+      required: [total, byStatus]
+      properties:
+        total: { type: integer, minimum: 0 }
+        byStatus:
+          type: object
+          required: [draft, published, archived]
+          properties:
+            draft: { type: integer, minimum: 0 }
+            published: { type: integer, minimum: 0 }
+            archived: { type: integer, minimum: 0 }
+
+    DashboardCountStats:
+      type: object
+      required: [total]
+      properties:
+        total: { type: integer, minimum: 0 }
+
+    DashboardImageStats:
+      type: object
+      required: [total, totalSizeBytes]
+      properties:
+        total: { type: integer, minimum: 0 }
+        totalSizeBytes:
+          type: integer
+          minimum: 0
+          description: Combined size of all stored images in bytes
+
+    DashboardSessionStats:
+      type: object
+      required: [active]
+      properties:
+        active:
+          type: integer
+          minimum: 0
+          description: Sessions that have not yet expired
+
+    DashboardStats:
+      type: object
+      required: [users, blogs, categories, tags, images, sessions, generatedAt]
+      properties:
+        users: { $ref: "#/components/schemas/DashboardUserStats" }
+        blogs: { $ref: "#/components/schemas/DashboardBlogStats" }
+        categories: { $ref: "#/components/schemas/DashboardCountStats" }
+        tags: { $ref: "#/components/schemas/DashboardCountStats" }
+        images: { $ref: "#/components/schemas/DashboardImageStats" }
+        sessions: { $ref: "#/components/schemas/DashboardSessionStats" }
+        generatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when these statistics were computed
 
     Pagination:
       type: object
