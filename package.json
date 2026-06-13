@@ -7,7 +7,8 @@
     "dev": "bun run --watch api/index.ts",
     "start": "bun run api/index.ts",
     "typecheck": "tsc --noEmit",
-    "openapi:validate": "bun openapi/validate.ts openapi/openapi.yaml"
+    "openapi:validate": "bun openapi/validate.ts openapi/openapi.yaml",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
