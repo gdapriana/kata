@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "yaml";
-import { auth } from "../lib/auth";
+import { auth } from "../lib/auth.js";
 import cors from "cors";
 import blogRouter from "./routes/blog.routes";
 import categoryRouter from "./routes/category.routes";
