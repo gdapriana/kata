@@ -7,6 +7,7 @@
     "dev": "bun run --watch api/index.ts",
     "start": "bun run api/index.ts",
     "typecheck": "tsc --noEmit",
+    "build": "prisma generate && tsc",
     "openapi:validate": "bun openapi/validate.ts openapi/openapi.yaml",
     "postinstall": "prisma generate"
   },
