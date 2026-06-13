@@ -1,5 +1,6 @@
 import { prisma } from "../db/db.js";
-import type { BlogStatus, UserRole } from "../../generated/prisma/client.js";
+import { UserRole } from "../middlewares/role.middleware.js";
+import { BlogStatus } from "../../generated/prisma/enums.js";
 
 const USER_ROLES: UserRole[] = ["user", "author", "editor", "admin"];
 const BLOG_STATUSES: BlogStatus[] = ["draft", "published", "archived"];

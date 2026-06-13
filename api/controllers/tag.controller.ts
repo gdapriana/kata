@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { createTag, deleteTag, getTag, listTags, TagServiceError, updateTag } from "../services/tag.service.js";
-import type { TagCreateInput, TagQueryInput, TagUpdateInput } from "../validations";
+import type { TagCreateInput, TagQueryInput, TagUpdateInput } from "../validations/tag.validation.js";
 
 type TagLookupQuery = {
   by: "id" | "slug";

@@ -6,8 +6,9 @@ import {
   listBlogsController,
   updateBlogController,
 } from "../controllers/blog.controller.js";
-import { authorMiddleware } from "../middlewares";
-import { blogValidations, validateRequest } from "../validations";
+import { authorMiddleware } from "../middlewares/author.middleware.js";
+import { validateRequest } from "../validations/common.validation.js";
+import { blogValidations } from "../validations/index.js";
 
 export const blogRouter = Router();
 

@@ -1,5 +1,5 @@
 import { prisma } from "../db/db.js";
-import type { TagCreateInput, TagQueryInput, TagUpdateInput } from "../validations";
+import type { TagCreateInput, TagQueryInput, TagUpdateInput } from "../validations/tag.validation.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 
 type TagLookup = {

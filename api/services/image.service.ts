@@ -1,7 +1,7 @@
 import type { UploadApiResponse } from "cloudinary";
 import { getCloudinary } from "../../lib/cloudinary.js";
 import { prisma } from "../db/db.js";
-import type { ImageQueryInput, ImageUpdateInput } from "../validations";
+import type { ImageQueryInput, ImageUpdateInput } from "../validations/image.validation.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 
 type ImageLookup = {

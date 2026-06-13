@@ -11,22 +11,22 @@ import {
   blogMutationQuerySchema,
   blogQuerySchema,
   blogUpdateSchema,
-} from "./blog.validation";
+} from "./blog.validation.js"
 import {
   categoryCreateSchema,
   categoryGetQuerySchema,
   categoryMutationQuerySchema,
   categoryQuerySchema,
   categoryUpdateSchema,
-} from "./category.validation";
+} from "./category.validation.js";
 import {
   imageGetQuerySchema,
   imageMutationQuerySchema,
   imageQuerySchema,
   imageUpdateSchema,
   imageUploadSchema,
-} from "./image.validation";
-import { tagCreateSchema, tagGetQuerySchema, tagMutationQuerySchema, tagQuerySchema, tagUpdateSchema } from "./tag.validation";
+} from "./image.validation.js";
+import { tagCreateSchema, tagGetQuerySchema, tagMutationQuerySchema, tagQuerySchema, tagUpdateSchema } from "./tag.validation.js";
 import {
   userCreateSchema,
   userGetQuerySchema,

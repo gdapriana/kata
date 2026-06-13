@@ -1,5 +1,5 @@
 import { prisma } from "../db/db.js";
-import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations";
+import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations/blog.validation.js";
 import type { Prisma } from "../../generated/prisma/client.js";
 
 type BlogLookup = {
@@ -91,11 +91,11 @@ function toBlogResponse(blog: BlogWithRelations) {
     authorName: blog.author.name,
     categoryId: blog.categoryId,
     featuredImageId: blog.featuredImageId,
-    galleryImageIds: blog.galleryImages.map((image) => image.id),
-    tagIds: blog.tags.map((tag) => tag.id),
+    galleryImageIds: blog.galleryImages.map((image: { id: string }) => image.id),
+    tagIds: blog.tags.map((tag: { id: string }) => tag.id),
     tags: blog.tags,
-    likedByUserIds: blog.likedByUsers.map((user) => user.id),
-    favoritedByUserIds: blog.favoritedByUsers.map((user) => user.id),
+    likedByUserIds: blog.likedByUsers.map((user: { id: string }) => user.id),
+    favoritedByUserIds: blog.favoritedByUsers.map((user: { id: string }) => user.id),
     likedCount: blog.likedByUsers.length,
     favoriteCount: blog.favoritedByUsers.length,
     publishedAt: blog.publishedAt,

@@ -6,8 +6,9 @@ import {
   listTagsController,
   updateTagController,
 } from "../controllers/tag.controller.js";
-import { editorMiddleware } from "../middlewares";
-import { tagValidations, validateRequest } from "../validations";
+import { validateRequest } from "../validations/common.validation.js";
+import { tagValidations } from "../validations/index.js";
+import { editorMiddleware } from "../middlewares/editor.middleware.js";
 
 export const tagRouter = Router();
 

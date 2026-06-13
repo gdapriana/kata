@@ -7,7 +7,7 @@ import {
   updateBlog,
   BlogServiceError,
 } from "../services/blog.service.js";
-import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations";
+import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations/blog.validation.js";
 
 type BlogLookupQuery = {
   by: "id" | "slug";

@@ -7,9 +7,10 @@ import {
   uploadImageController,
   uploadImagesController,
 } from "../controllers/image.controller.js";
-import { authorMiddleware } from "../middlewares";
 import { imageUpload, MAX_BULK_FILES } from "../middlewares/upload.middleware.js";
-import { imageValidations, validateRequest } from "../validations";
+import { validateRequest } from "../validations/common.validation.js";
+import { imageValidations } from "../validations/index.js";
+import { authorMiddleware } from "../middlewares/author.middleware.js";
 
 export const imageRouter = Router();
 
