@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { atLeastOneField, limitSchema, lookupQuerySchema, orderSchema, pageSchema, slugSchema } from "./common.validation";
+import { atLeastOneField, limitSchema, lookupQuerySchema, orderSchema, pageSchema, slugSchema } from "./common.validation.js";
 
 export const tagCreateSchema = z.strictObject({
   name: z.string().min(1).max(50),
