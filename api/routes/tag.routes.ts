@@ -5,7 +5,7 @@ import {
   getTagController,
   listTagsController,
   updateTagController,
-} from "../controllers/tag.controller";
+} from "../controllers/tag.controller.js";
 import { editorMiddleware } from "../middlewares";
 import { tagValidations, validateRequest } from "../validations";
 

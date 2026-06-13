@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { atLeastOneField, idLookupQuerySchema, limitSchema, orderSchema, pageSchema, uuidSchema } from "./common.validation";
+import { atLeastOneField, idLookupQuerySchema, limitSchema, orderSchema, pageSchema, uuidSchema } from "./common.validation.js";
 
 export const imageUploadSchema = z.strictObject({
   name: z.string().optional(),

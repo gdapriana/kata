@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
-import { prisma } from "../db/db";
-import { auth } from "../../lib/auth";
+import { prisma } from "../db/db.js";
+import { auth } from "../../lib/auth.js";
 
 export const USER_ROLES = ["user", "author", "editor", "admin"] as const;
 export type UserRole = (typeof USER_ROLES)[number];

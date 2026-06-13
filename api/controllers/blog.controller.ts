@@ -6,7 +6,7 @@ import {
   listBlogs,
   updateBlog,
   BlogServiceError,
-} from "../services/blog.service";
+} from "../services/blog.service.js";
 import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations";
 
 type BlogLookupQuery = {

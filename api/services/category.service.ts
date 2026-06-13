@@ -1,6 +1,6 @@
-import { prisma } from "../db/db";
+import { prisma } from "../db/db.js";
 import type { CategoryCreateInput, CategoryQueryInput, CategoryUpdateInput } from "../validations";
-import type { Prisma } from "../../generated/prisma/client";
+import type { Prisma } from "../../generated/prisma/client.js";
 
 type CategoryLookup = {
   by: "id" | "slug";

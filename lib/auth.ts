@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "../api/db/db";
+import { prisma } from "../api/db/db.js";
 
 const clientUrl = process.env.CLIENT_URL ?? "http://localhost:3001";
 

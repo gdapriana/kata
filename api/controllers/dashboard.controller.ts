@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { getDashboardStats } from "../services/dashboard.service";
+import { getDashboardStats } from "../services/dashboard.service.js";
 
 export async function getDashboardController(_req: Request, res: Response, next: NextFunction) {
   try {

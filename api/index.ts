@@ -6,11 +6,11 @@ import { fileURLToPath } from "node:url";
 import yaml from "yaml";
 import { auth } from "../lib/auth.js";
 import cors from "cors";
-import blogRouter from "./routes/blog.routes";
-import categoryRouter from "./routes/category.routes";
-import tagRouter from "./routes/tag.routes";
-import imageRouter from "./routes/image.routes";
-import dashboardRouter from "./routes/dashboard.routes";
+import blogRouter from "./routes/blog.routes.js";
+import categoryRouter from "./routes/category.routes.js";
+import tagRouter from "./routes/tag.routes.js";
+import imageRouter from "./routes/image.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
 
 const app = express();
 

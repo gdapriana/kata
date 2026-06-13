@@ -8,7 +8,7 @@ import {
   pageSchema,
   slugSchema,
   uuidSchema,
-} from "./common.validation";
+} from "./common.validation.js";
 
 export const blogStatusSchema = z.enum(["draft", "published", "archived"]);
 

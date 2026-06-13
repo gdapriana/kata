@@ -7,7 +7,7 @@ import {
   pageSchema,
   slugSchema,
   uuidSchema,
-} from "./common.validation";
+} from "./common.validation.js";
 
 export const categoryCreateSchema = z.strictObject({
   name: z.string().min(1).max(100),

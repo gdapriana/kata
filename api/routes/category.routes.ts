@@ -5,7 +5,7 @@ import {
   getCategoryController,
   listCategoriesController,
   updateCategoryController,
-} from "../controllers/category.controller";
+} from "../controllers/category.controller.js";
 import { editorMiddleware } from "../middlewares";
 import { categoryValidations, validateRequest } from "../validations";
 

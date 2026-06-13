@@ -1,9 +1,9 @@
-export * from "./blog.validation";
-export * from "./category.validation";
-export * from "./common.validation";
-export * from "./image.validation";
-export * from "./tag.validation";
-export * from "./user.validation";
+export * from "./blog.validation.js";
+export * from "./category.validation.js";
+export * from "./common.validation.js";
+export * from "./image.validation.js";
+export * from "./tag.validation.js";
+export * from "./user.validation.js";
 
 import {
   blogCreateSchema,
@@ -33,7 +33,7 @@ import {
   userMutationQuerySchema,
   userQuerySchema,
   userUpdateSchema,
-} from "./user.validation";
+} from "./user.validation.js";
 
 export const userValidations = {
   get: { query: userGetQuerySchema },

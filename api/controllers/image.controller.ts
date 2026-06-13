@@ -7,7 +7,7 @@ import {
   updateImage,
   uploadImage,
   uploadImages,
-} from "../services/image.service";
+} from "../services/image.service.js";
 import type { ImageQueryInput, ImageUpdateInput, ImageUploadInput } from "../validations";
 
 type ImageLookupQuery = {

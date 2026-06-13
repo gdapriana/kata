@@ -6,7 +6,7 @@ import {
   getCategory,
   listCategories,
   updateCategory,
-} from "../services/category.service";
+} from "../services/category.service.js";
 import type { CategoryCreateInput, CategoryQueryInput, CategoryUpdateInput } from "../validations";
 
 type CategoryLookupQuery = {

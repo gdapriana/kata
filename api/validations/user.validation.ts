@@ -6,7 +6,7 @@ import {
   orderSchema,
   pageSchema,
   uriSchema,
-} from "./common.validation";
+} from "./common.validation.js";
 
 export const userRoleSchema = z.enum(["user", "author", "editor", "admin"]);
 

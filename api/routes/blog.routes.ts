@@ -5,7 +5,7 @@ import {
   getBlogController,
   listBlogsController,
   updateBlogController,
-} from "../controllers/blog.controller";
+} from "../controllers/blog.controller.js";
 import { authorMiddleware } from "../middlewares";
 import { blogValidations, validateRequest } from "../validations";
 

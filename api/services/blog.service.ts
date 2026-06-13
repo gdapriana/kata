@@ -1,6 +1,6 @@
-import { prisma } from "../db/db";
+import { prisma } from "../db/db.js";
 import type { BlogCreateInput, BlogQueryInput, BlogUpdateInput } from "../validations";
-import type { Prisma } from "../../generated/prisma/client";
+import type { Prisma } from "../../generated/prisma/client.js";
 
 type BlogLookup = {
   by: "id" | "slug";

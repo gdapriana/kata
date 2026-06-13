@@ -6,9 +6,9 @@ import {
   updateImageController,
   uploadImageController,
   uploadImagesController,
-} from "../controllers/image.controller";
+} from "../controllers/image.controller.js";
 import { authorMiddleware } from "../middlewares";
-import { imageUpload, MAX_BULK_FILES } from "../middlewares/upload.middleware";
+import { imageUpload, MAX_BULK_FILES } from "../middlewares/upload.middleware.js";
 import { imageValidations, validateRequest } from "../validations";
 
 export const imageRouter = Router();
