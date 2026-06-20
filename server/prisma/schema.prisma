@@ -3,7 +3,7 @@ generator client {
   output                 = "../app/generated/prisma"
   moduleFormat           = "esm"
   generatedFileExtension = "ts"
-  importFileExtension    = "" // ← was "ts", causes the broken reference once compiled to .js
+  importFileExtension    = "js"
 }
 
 datasource db {
