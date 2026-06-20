@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER  @map("user")
+  ADMIN @map("admin")
+}
+
+enum BlogStatus {
+  DRAFT     @map("draft")
+  PUBLISHED @map("published")
+  ARCHIVED  @map("archived")
+}
+
+model User {
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  blogs          Blog[]    @relation("BlogAuthor")
+  uploadedImages Image[]   @relation("ImageUploader")
+  likedBlogs     Blog[]    @relation("BlogLikes")
+  favoritedBlogs Blog[]    @relation("BlogFavorites")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String
+  slug        String
+  description String?
+  parentId    String?
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+  blogs       Blog[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([slug])
+  @@index([parentId])
+  @@map("category")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  blogs     Blog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug])
+  @@map("tag")
+}
+
+model Image {
+  id                 String   @id @default(uuid())
+  name               String?
+  alt                String?
+  url                String
+  cloudinaryPublicId String?
+  mimeType           String
+  size               Int
+  width              Int?
+  height             Int?
+  uploaderId         String
+  uploader           User     @relation("ImageUploader", fields: [uploaderId], references: [id], onDelete: Cascade)
+  featuredInBlogs    Blog[]   @relation("BlogFeaturedImage")
+  galleryBlogs       Blog[]   @relation("BlogGalleryImages")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([uploaderId])
+  @@map("image")
+}
+
+model Blog {
+  id               String     @id @default(uuid())
+  title            String
+  slug             String
+  content          String
+  excerpt          String?
+  status           BlogStatus @default(DRAFT)
+  authorId         String
+  author           User       @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId       String
+  category         Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  featuredImageId  String?
+  featuredImage    Image?     @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  galleryImages    Image[]    @relation("BlogGalleryImages")
+  tags             Tag[]
+  likedByUsers     User[]     @relation("BlogLikes")
+  favoritedByUsers User[]     @relation("BlogFavorites")
+  likedCount       Int        @default(0)
+  favoriteCount    Int        @default(0)
+  publishedAt      DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@unique([slug])
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([featuredImageId])
+  @@index([status])
+  @@index([publishedAt])
+  @@map("blog")
+}

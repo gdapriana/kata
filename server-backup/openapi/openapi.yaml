@@ -1,0 +1,1368 @@
+openapi: 3.1.0
+info:
+  title: Kata Blog API
+  version: 0.3.0
+  summary: REST API for the Kata blog application
+  description: |
+    HTTP API for the Kata blog platform. Manages users, blog posts, categories,
+    tags, and images. All endpoints are mounted under the `/api` prefix.
+
+    Conventions:
+      - **Get one**: `GET /{resource}/get?by=id|slug&value=...`
+      - **List**:   `GET /{resource}/query?sort=...&order=asc|desc&...`
+      - **Auth**:   Bearer JWT on all write/delete endpoints.
+      - **Images**: Looked up by `id` only. Upload via `multipart/form-data` to
+        Cloudinary — single file at `POST /images`, up to 10 files at
+        `POST /images/bulk`.
+
+    Backed by PostgreSQL via Prisma in production; this spec is the source of
+    truth for handlers and clients.
+  contact:
+    name: Kata
+  license:
+    name: MIT
+    identifier: MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development
+  - url: https://kata.vercel.app/api
+    description: Vercel deployment (replace with your domain)
+
+tags:
+  - name: System
+    description: Health and metadata
+  - name: Dashboard
+    description: Admin-only platform statistics and overview
+  - name: Users
+    description: User accounts (Better Auth shape)
+  - name: Blogs
+    description: Blog posts
+  - name: Categories
+    description: Blog categories (one per blog)
+  - name: Tags
+    description: Free-form tags (many per blog)
+  - name: Images
+    description: |
+      Images uploaded to Cloudinary for featured images and blog galleries.
+      Write endpoints require the `author`, `editor`, or `admin` role.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATHS
+# ─────────────────────────────────────────────────────────────────────────────
+paths:
+  # ── System ────────────────────────────────────────────────────────────────
+  /health:
+    get:
+      tags: [System]
+      summary: Health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Get platform statistics
+      description: |
+        Returns aggregate counts and breakdowns across users, blogs, categories,
+        tags, images, and active sessions. Requires the `admin` role.
+      operationId: getDashboard
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Platform statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Users ─────────────────────────────────────────────────────────────────
+  /users/get:
+    get:
+      tags: [Users]
+      summary: Get a single user
+      operationId: getUser
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "200":
+          description: The user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /users/query:
+    get:
+      tags: [Users]
+      summary: List users
+      operationId: listUsers
+      parameters:
+        - $ref: "#/components/parameters/SortParam"
+        - $ref: "#/components/parameters/OrderParam"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Case-insensitive search over name and email
+        - in: query
+          name: role
+          schema:
+            $ref: "#/components/schemas/UserRole"
+        - in: query
+          name: emailVerified
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Paginated list of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+
+  /users:
+    post:
+      tags: [Users]
+      summary: Create a user
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      tags: [Users]
+      summary: Update a user
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: by
+          required: true
+          schema:
+            type: string
+            enum: [id]
+        - in: query
+          name: value
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Users]
+      summary: Delete a user
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: by
+          required: true
+          schema:
+            type: string
+            enum: [id]
+        - in: query
+          name: value
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: User deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Blogs ─────────────────────────────────────────────────────────────────
+  /blogs/get:
+    get:
+      tags: [Blogs]
+      summary: Get a single blog post
+      operationId: getBlog
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "200":
+          description: The blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Blog"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /blogs/query:
+    get:
+      tags: [Blogs]
+      summary: List blog posts
+      operationId: listBlogs
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [name, createdAt, updatedAt, publishedAt, likedCount, favoriteCount]
+            default: createdAt
+        - $ref: "#/components/parameters/OrderParam"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Case-insensitive search over title and content
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/BlogStatus"
+        - in: query
+          name: authorId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: categoryId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: tag
+          schema:
+            type: string
+          description: Filter by a single tag slug
+        - in: query
+          name: featuredImageId
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Paginated list of blog posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogListResponse"
+
+  /blogs:
+    post:
+      tags: [Blogs]
+      summary: Create a blog post
+      operationId: createBlog
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogCreate"
+      responses:
+        "201":
+          description: Blog created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Blog"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      tags: [Blogs]
+      summary: Update a blog post
+      operationId: updateBlog
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogUpdate"
+      responses:
+        "200":
+          description: Updated blog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Blog"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags: [Blogs]
+      summary: Delete a blog post
+      operationId: deleteBlog
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "204":
+          description: Blog deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Categories ────────────────────────────────────────────────────────────
+  /categories/get:
+    get:
+      tags: [Categories]
+      summary: Get a single category
+      operationId: getCategory
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "200":
+          description: The category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /categories/query:
+    get:
+      tags: [Categories]
+      summary: List categories
+      operationId: listCategories
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [name, createdAt, updatedAt]
+            default: name
+        - $ref: "#/components/parameters/OrderParam"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: parentId
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Paginated list of categories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryListResponse"
+
+  /categories:
+    post:
+      tags: [Categories]
+      summary: Create a category
+      operationId: createCategory
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryCreate"
+      responses:
+        "201":
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      tags: [Categories]
+      summary: Update a category
+      operationId: updateCategory
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryUpdate"
+      responses:
+        "200":
+          description: Updated category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Categories]
+      summary: Delete a category
+      operationId: deleteCategory
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "204":
+          description: Category deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Tags ──────────────────────────────────────────────────────────────────
+  /tags/get:
+    get:
+      tags: [Tags]
+      summary: Get a single tag
+      operationId: getTag
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "200":
+          description: The tag
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /tags/query:
+    get:
+      tags: [Tags]
+      summary: List tags
+      operationId: listTags
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [name, createdAt, updatedAt, blogCount]
+            default: name
+        - $ref: "#/components/parameters/OrderParam"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated list of tags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagListResponse"
+
+  /tags:
+    post:
+      tags: [Tags]
+      summary: Create a tag
+      operationId: createTag
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagCreate"
+      responses:
+        "201":
+          description: Tag created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Slug already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      tags: [Tags]
+      summary: Update a tag
+      operationId: updateTag
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagUpdate"
+      responses:
+        "200":
+          description: Updated tag
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Tags]
+      summary: Delete a tag
+      operationId: deleteTag
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ByParam"
+        - $ref: "#/components/parameters/ValueParam"
+      responses:
+        "204":
+          description: Tag deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Images ────────────────────────────────────────────────────────────────
+  /images/get:
+    get:
+      tags: [Images]
+      summary: Get a single image
+      operationId: getImage
+      parameters:
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
+      responses:
+        "200":
+          description: The image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /images/query:
+    get:
+      tags: [Images]
+      summary: List images
+      operationId: listImages
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [name, createdAt, updatedAt]
+            default: createdAt
+        - $ref: "#/components/parameters/OrderParam"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: uploaderId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: mimeType
+          schema:
+            type: string
+          description: Filter by exact mime type, e.g. `image/png`
+      responses:
+        "200":
+          description: Paginated list of images
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageListResponse"
+
+  /images/bulk:
+    post:
+      tags: [Images]
+      summary: Upload multiple images
+      description: |
+        Uploads up to 10 image files to Cloudinary and stores their metadata in
+        the database. Requires the `author`, `editor`, or `admin` role. The
+        `uploaderId` is taken from the authenticated session.
+
+        If any file fails validation or upload, the entire request is rolled
+        back and no images are saved.
+
+        Accepted file types: JPEG, PNG, WebP, GIF. Maximum file size per file:
+        10 MB.
+      operationId: uploadImages
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ImageBulkUpload"
+      responses:
+        "201":
+          description: Images uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageBulkUploadResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "502":
+          description: Cloudinary upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /images:
+    post:
+      tags: [Images]
+      summary: Upload a single image
+      description: |
+        Uploads one image file to Cloudinary and stores its metadata in the
+        database. The `uploaderId` is taken from the authenticated session.
+
+        For multiple files in one request, use `POST /images/bulk` instead.
+
+        Accepted file types: JPEG, PNG, WebP, GIF. Maximum file size: 10 MB.
+      operationId: uploadImage
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ImageUpload"
+      responses:
+        "201":
+          description: Image uploaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "502":
+          description: Cloudinary upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    patch:
+      tags: [Images]
+      summary: Update image metadata
+      description: |
+        Updates optional display metadata. Requires the `author`, `editor`, or
+        `admin` role.
+      operationId: updateImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ImageUpdate"
+      responses:
+        "200":
+          description: Updated image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      tags: [Images]
+      summary: Delete an image
+      description: |
+        Deletes the image from Cloudinary and removes its database record.
+        Requires the `author`, `editor`, or `admin` role.
+      operationId: deleteImage
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdByParam"
+        - $ref: "#/components/parameters/IdValueParam"
+      responses:
+        "204":
+          description: Image deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "502":
+          description: Cloudinary delete failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMPONENTS
+# ─────────────────────────────────────────────────────────────────────────────
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Bearer token. The full JWT flow is wired in a later step; this spec
+        declares the contract so write endpoints are protected.
+
+  parameters:
+    ByParam:
+      in: query
+      name: by
+      required: true
+      schema:
+        type: string
+        enum: [id, slug]
+      description: Field used to look up the resource
+    ValueParam:
+      in: query
+      name: value
+      required: true
+      schema:
+        type: string
+      description: |
+        Value of the lookup field. UUID when `by=id`, slug string when
+        `by=slug`.
+    IdByParam:
+      in: query
+      name: by
+      required: true
+      schema:
+        type: string
+        enum: [id]
+      description: Images are looked up by id only
+    IdValueParam:
+      in: query
+      name: value
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Image UUID
+    SortParam:
+      in: query
+      name: sort
+      schema:
+        type: string
+      description: Field to sort by. Resource-specific enum is documented per endpoint.
+    OrderParam:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+    PageParam:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Authenticated user lacks the required role
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ValidationError:
+      description: Request failed validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    # ── Common ─────────────────────────────────────────────────────────────
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        uptime:
+          type: number
+
+    DashboardUserStats:
+      type: object
+      required: [total, byRole, emailVerified, emailUnverified]
+      properties:
+        total: { type: integer, minimum: 0 }
+        byRole:
+          type: object
+          required: [user, author, editor, admin]
+          properties:
+            user: { type: integer, minimum: 0 }
+            author: { type: integer, minimum: 0 }
+            editor: { type: integer, minimum: 0 }
+            admin: { type: integer, minimum: 0 }
+        emailVerified: { type: integer, minimum: 0 }
+        emailUnverified: { type: integer, minimum: 0 }
+
+    DashboardBlogStats:
+      type: object
+      required: [total, byStatus]
+      properties:
+        total: { type: integer, minimum: 0 }
+        byStatus:
+          type: object
+          required: [draft, published, archived]
+          properties:
+            draft: { type: integer, minimum: 0 }
+            published: { type: integer, minimum: 0 }
+            archived: { type: integer, minimum: 0 }
+
+    DashboardCountStats:
+      type: object
+      required: [total]
+      properties:
+        total: { type: integer, minimum: 0 }
+
+    DashboardImageStats:
+      type: object
+      required: [total, totalSizeBytes]
+      properties:
+        total: { type: integer, minimum: 0 }
+        totalSizeBytes:
+          type: integer
+          minimum: 0
+          description: Combined size of all stored images in bytes
+
+    DashboardSessionStats:
+      type: object
+      required: [active]
+      properties:
+        active:
+          type: integer
+          minimum: 0
+          description: Sessions that have not yet expired
+
+    DashboardStats:
+      type: object
+      required: [users, blogs, categories, tags, images, sessions, generatedAt]
+      properties:
+        users: { $ref: "#/components/schemas/DashboardUserStats" }
+        blogs: { $ref: "#/components/schemas/DashboardBlogStats" }
+        categories: { $ref: "#/components/schemas/DashboardCountStats" }
+        tags: { $ref: "#/components/schemas/DashboardCountStats" }
+        images: { $ref: "#/components/schemas/DashboardImageStats" }
+        sessions: { $ref: "#/components/schemas/DashboardSessionStats" }
+        generatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when these statistics were computed
+
+    Pagination:
+      type: object
+      required: [page, limit, total, totalPages]
+      properties:
+        page: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1 }
+        total: { type: integer, minimum: 0 }
+        totalPages: { type: integer, minimum: 0 }
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, example: BLOG_NOT_FOUND }
+            message: { type: string }
+            details:
+              type: object
+              additionalProperties: true
+
+    # ── Users ──────────────────────────────────────────────────────────────
+    UserRole:
+      type: string
+      enum: [user, author, editor, admin]
+
+    User:
+      type: object
+      required: [id, email, name, role, emailVerified, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        email:
+          type: string
+          format: email
+        name: { type: string }
+        image:
+          type: string
+          format: uri
+
+        emailVerified: { type: boolean }
+        role: { $ref: "#/components/schemas/UserRole" }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    UserCreate:
+      type: object
+      required: [email, name]
+      properties:
+        email: { type: string, format: email }
+        name: { type: string, minLength: 1, maxLength: 100 }
+        image: { type: string, format: uri }
+        role: { $ref: "#/components/schemas/UserRole" }
+
+    UserUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        image: { type: string, format: uri }
+        role: { $ref: "#/components/schemas/UserRole" }
+
+    UserListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/User" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
+
+    # ── Categories ─────────────────────────────────────────────────────────
+
+    Category:
+      type: object
+      required: [id, name, slug, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 1, maxLength: 100 }
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        description: { type: string }
+        parentId: { type: string, format: uuid }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CategoryCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        description: { type: string }
+        parentId: { type: string, format: uuid }
+
+    CategoryUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        description: { type: string }
+        parentId: { type: string, format: uuid }
+
+    CategoryListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Category" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
+
+    # ── Tags ───────────────────────────────────────────────────────────────
+    Tag:
+      type: object
+      required: [id, name, slug, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string, minLength: 1, maxLength: 50 }
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    TagCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 50 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+
+    TagUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 50 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+
+    TagListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Tag" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
+
+    # ── Images ─────────────────────────────────────────────────────────────
+    Image:
+      type: object
+      required: [id, url, mimeType, size, uploaderId, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        alt: { type: string }
+        url:
+          type: string
+          format: uri
+          description: Cloudinary secure URL
+        cloudinaryPublicId:
+          type: string
+          description: Cloudinary public ID used for storage cleanup on delete
+        mimeType: { type: string, example: image/png }
+        size: { type: integer, minimum: 0, description: Size in bytes }
+        width: { type: integer, minimum: 0 }
+        height: { type: integer, minimum: 0 }
+        uploaderId: { type: string, format: uuid }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    ImageUpload:
+      type: object
+      required: [file]
+      properties:
+        file:
+          type: string
+          format: binary
+          description: Image file (JPEG, PNG, WebP, or GIF; max 10 MB)
+        name:
+          type: string
+          description: Optional display name (defaults to the original filename)
+        alt:
+          type: string
+          description: Optional alt text for accessibility
+
+    ImageBulkUpload:
+      type: object
+      required: [files]
+      properties:
+        files:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            format: binary
+          description: |
+            One or more image files. Repeat the `files` field for each upload
+            (JPEG, PNG, WebP, or GIF; max 10 MB each).
+
+    ImageBulkUploadResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          minItems: 1
+          items: { $ref: "#/components/schemas/Image" }
+          description: Uploaded images, in the same order as the request files
+
+    ImageUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        name: { type: string }
+        alt: { type: string }
+
+    ImageListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Image" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
+
+    # ── Blogs ──────────────────────────────────────────────────────────────
+    BlogStatus:
+      type: string
+      enum: [draft, published, archived]
+
+    Blog:
+      type: object
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - status
+        - authorId
+        - authorName
+        - tags
+        - categoryId
+        - likedByUserIds
+        - favoritedByUserIds
+        - createdAt
+        - updatedAt
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        content: { type: string }
+        excerpt:
+          type: string
+          maxLength: 500
+
+        status: { $ref: "#/components/schemas/BlogStatus" }
+        authorId: { type: string, format: uuid }
+        authorName: { type: string }
+        categoryId: { type: string, format: uuid }
+        featuredImageId: { type: string, format: uuid }
+        galleryImageIds:
+          type: array
+          items: { type: string, format: uuid }
+        tagIds:
+          type: array
+          items: { type: string, format: uuid }
+        tags:
+          type: array
+          items: { $ref: "#/components/schemas/Tag" }
+        likedByUserIds:
+          type: array
+          items: { type: string, format: uuid }
+        favoritedByUserIds:
+          type: array
+          items: { type: string, format: uuid }
+        likedCount: { type: integer, minimum: 0 }
+        favoriteCount: { type: integer, minimum: 0 }
+        publishedAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    BlogCreate:
+      type: object
+      required: [title, content, authorId, categoryId]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        content: { type: string }
+        excerpt: { type: string, maxLength: 500 }
+        status: { $ref: "#/components/schemas/BlogStatus" }
+        authorId: { type: string, format: uuid }
+        categoryId: { type: string, format: uuid }
+        featuredImageId: { type: string, format: uuid }
+        galleryImageIds:
+          type: array
+          items: { type: string, format: uuid }
+        tagIds:
+          type: array
+          items: { type: string, format: uuid }
+        publishedAt: { type: string, format: date-time }
+
+    BlogUpdate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        slug: { type: string, pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        content: { type: string }
+        excerpt: { type: string, maxLength: 500 }
+        status: { $ref: "#/components/schemas/BlogStatus" }
+        categoryId: { type: string, format: uuid }
+        featuredImageId: { type: string, format: uuid }
+        galleryImageIds:
+          type: array
+          items: { type: string, format: uuid }
+        tagIds:
+          type: array
+          items: { type: string, format: uuid }
+        publishedAt: { type: string, format: date-time }
+
+    BlogListResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/Blog" }
+        pagination: { $ref: "#/components/schemas/Pagination" }
