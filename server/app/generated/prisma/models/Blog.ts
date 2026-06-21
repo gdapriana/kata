@@ -297,6 +297,7 @@ export type BlogWhereInput = {
   featuredImage?: Prisma.XOR<Prisma.ImageNullableScalarRelationFilter, Prisma.ImageWhereInput> | null
   galleryImages?: Prisma.ImageListRelationFilter
   tags?: Prisma.TagListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
   likedByUsers?: Prisma.UserListRelationFilter
   favoritedByUsers?: Prisma.UserListRelationFilter
 }
@@ -321,6 +322,7 @@ export type BlogOrderByWithRelationInput = {
   featuredImage?: Prisma.ImageOrderByWithRelationInput
   galleryImages?: Prisma.ImageOrderByRelationAggregateInput
   tags?: Prisma.TagOrderByRelationAggregateInput
+  comments?: Prisma.CommentOrderByRelationAggregateInput
   likedByUsers?: Prisma.UserOrderByRelationAggregateInput
   favoritedByUsers?: Prisma.UserOrderByRelationAggregateInput
 }
@@ -348,6 +350,7 @@ export type BlogWhereUniqueInput = Prisma.AtLeast<{
   featuredImage?: Prisma.XOR<Prisma.ImageNullableScalarRelationFilter, Prisma.ImageWhereInput> | null
   galleryImages?: Prisma.ImageListRelationFilter
   tags?: Prisma.TagListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
   likedByUsers?: Prisma.UserListRelationFilter
   favoritedByUsers?: Prisma.UserListRelationFilter
 }, "id" | "slug">
@@ -411,6 +414,7 @@ export type BlogCreateInput = {
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -432,6 +436,7 @@ export type BlogUncheckedCreateInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -453,6 +458,7 @@ export type BlogUpdateInput = {
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -474,6 +480,7 @@ export type BlogUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -595,6 +602,11 @@ export type BlogMinOrderByAggregateInput = {
 export type BlogSumOrderByAggregateInput = {
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+}
+
+export type BlogScalarRelationFilter = {
+  is?: Prisma.BlogWhereInput
+  isNot?: Prisma.BlogWhereInput
 }
 
 export type BlogCreateNestedManyWithoutAuthorInput = {
@@ -879,6 +891,20 @@ export type EnumBlogStatusFieldUpdateOperationsInput = {
   set?: $Enums.BlogStatus
 }
 
+export type BlogCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutCommentsInput, Prisma.BlogUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.BlogWhereUniqueInput
+}
+
+export type BlogUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutCommentsInput, Prisma.BlogUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.BlogUpsertWithoutCommentsInput
+  connect?: Prisma.BlogWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BlogUpdateToOneWithWhereWithoutCommentsInput, Prisma.BlogUpdateWithoutCommentsInput>, Prisma.BlogUncheckedUpdateWithoutCommentsInput>
+}
+
 export type BlogCreateWithoutAuthorInput = {
   id?: string
   title: string
@@ -895,6 +921,7 @@ export type BlogCreateWithoutAuthorInput = {
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -915,6 +942,7 @@ export type BlogUncheckedCreateWithoutAuthorInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -946,6 +974,7 @@ export type BlogCreateWithoutLikedByUsersInput = {
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
 
@@ -966,6 +995,7 @@ export type BlogUncheckedCreateWithoutLikedByUsersInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
 
@@ -991,6 +1021,7 @@ export type BlogCreateWithoutFavoritedByUsersInput = {
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
 }
 
@@ -1011,6 +1042,7 @@ export type BlogUncheckedCreateWithoutFavoritedByUsersInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
 }
 
@@ -1103,6 +1135,7 @@ export type BlogCreateWithoutCategoryInput = {
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1123,6 +1156,7 @@ export type BlogUncheckedCreateWithoutCategoryInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1169,6 +1203,7 @@ export type BlogCreateWithoutTagsInput = {
   category: Prisma.CategoryCreateNestedOneWithoutBlogsInput
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1189,6 +1224,7 @@ export type BlogUncheckedCreateWithoutTagsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1230,6 +1266,7 @@ export type BlogCreateWithoutFeaturedImageInput = {
   category: Prisma.CategoryCreateNestedOneWithoutBlogsInput
   galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1250,6 +1287,7 @@ export type BlogUncheckedCreateWithoutFeaturedImageInput = {
   updatedAt?: Date | string
   galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1280,6 +1318,7 @@ export type BlogCreateWithoutGalleryImagesInput = {
   category: Prisma.CategoryCreateNestedOneWithoutBlogsInput
   featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1300,6 +1339,7 @@ export type BlogUncheckedCreateWithoutGalleryImagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
 }
@@ -1341,6 +1381,106 @@ export type BlogUpdateManyWithWhereWithoutGalleryImagesInput = {
   data: Prisma.XOR<Prisma.BlogUpdateManyMutationInput, Prisma.BlogUncheckedUpdateManyWithoutGalleryImagesInput>
 }
 
+export type BlogCreateWithoutCommentsInput = {
+  id?: string
+  title: string
+  slug: string
+  content: string
+  excerpt?: string | null
+  status?: $Enums.BlogStatus
+  likedCount?: number
+  favoriteCount?: number
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutBlogsInput
+  category: Prisma.CategoryCreateNestedOneWithoutBlogsInput
+  featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
+  galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
+  tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
+  favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+}
+
+export type BlogUncheckedCreateWithoutCommentsInput = {
+  id?: string
+  title: string
+  slug: string
+  content: string
+  excerpt?: string | null
+  status?: $Enums.BlogStatus
+  authorId: string
+  categoryId: string
+  featuredImageId?: string | null
+  likedCount?: number
+  favoriteCount?: number
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
+  favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+}
+
+export type BlogCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.BlogWhereUniqueInput
+  create: Prisma.XOR<Prisma.BlogCreateWithoutCommentsInput, Prisma.BlogUncheckedCreateWithoutCommentsInput>
+}
+
+export type BlogUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.BlogUpdateWithoutCommentsInput, Prisma.BlogUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.BlogCreateWithoutCommentsInput, Prisma.BlogUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.BlogWhereInput
+}
+
+export type BlogUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.BlogWhereInput
+  data: Prisma.XOR<Prisma.BlogUpdateWithoutCommentsInput, Prisma.BlogUncheckedUpdateWithoutCommentsInput>
+}
+
+export type BlogUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
+  likedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutBlogsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutBlogsNestedInput
+  featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
+  galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
+  tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
+  favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+}
+
+export type BlogUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
+  favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+}
+
 export type BlogCreateManyAuthorInput = {
   id?: string
   title: string
@@ -1373,6 +1513,7 @@ export type BlogUpdateWithoutAuthorInput = {
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1393,6 +1534,7 @@ export type BlogUncheckedUpdateWithoutAuthorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1430,6 +1572,7 @@ export type BlogUpdateWithoutLikedByUsersInput = {
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
 
@@ -1450,6 +1593,7 @@ export type BlogUncheckedUpdateWithoutLikedByUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
 
@@ -1487,6 +1631,7 @@ export type BlogUpdateWithoutFavoritedByUsersInput = {
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
 }
 
@@ -1507,6 +1652,7 @@ export type BlogUncheckedUpdateWithoutFavoritedByUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
 }
 
@@ -1559,6 +1705,7 @@ export type BlogUpdateWithoutCategoryInput = {
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1579,6 +1726,7 @@ export type BlogUncheckedUpdateWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1615,6 +1763,7 @@ export type BlogUpdateWithoutTagsInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutBlogsNestedInput
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1635,6 +1784,7 @@ export type BlogUncheckedUpdateWithoutTagsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1688,6 +1838,7 @@ export type BlogUpdateWithoutFeaturedImageInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutBlogsNestedInput
   galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1708,6 +1859,7 @@ export type BlogUncheckedUpdateWithoutFeaturedImageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1744,6 +1896,7 @@ export type BlogUpdateWithoutGalleryImagesInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutBlogsNestedInput
   featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1764,6 +1917,7 @@ export type BlogUncheckedUpdateWithoutGalleryImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
 }
@@ -1793,6 +1947,7 @@ export type BlogUncheckedUpdateManyWithoutGalleryImagesInput = {
 export type BlogCountOutputType = {
   galleryImages: number
   tags: number
+  comments: number
   likedByUsers: number
   favoritedByUsers: number
 }
@@ -1800,6 +1955,7 @@ export type BlogCountOutputType = {
 export type BlogCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   galleryImages?: boolean | BlogCountOutputTypeCountGalleryImagesArgs
   tags?: boolean | BlogCountOutputTypeCountTagsArgs
+  comments?: boolean | BlogCountOutputTypeCountCommentsArgs
   likedByUsers?: boolean | BlogCountOutputTypeCountLikedByUsersArgs
   favoritedByUsers?: boolean | BlogCountOutputTypeCountFavoritedByUsersArgs
 }
@@ -1826,6 +1982,13 @@ export type BlogCountOutputTypeCountGalleryImagesArgs<ExtArgs extends runtime.Ty
  */
 export type BlogCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TagWhereInput
+}
+
+/**
+ * BlogCountOutputType without action
+ */
+export type BlogCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommentWhereInput
 }
 
 /**
@@ -1863,6 +2026,7 @@ export type BlogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   featuredImage?: boolean | Prisma.Blog$featuredImageArgs<ExtArgs>
   galleryImages?: boolean | Prisma.Blog$galleryImagesArgs<ExtArgs>
   tags?: boolean | Prisma.Blog$tagsArgs<ExtArgs>
+  comments?: boolean | Prisma.Blog$commentsArgs<ExtArgs>
   likedByUsers?: boolean | Prisma.Blog$likedByUsersArgs<ExtArgs>
   favoritedByUsers?: boolean | Prisma.Blog$favoritedByUsersArgs<ExtArgs>
   _count?: boolean | Prisma.BlogCountOutputTypeDefaultArgs<ExtArgs>
@@ -1932,6 +2096,7 @@ export type BlogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   featuredImage?: boolean | Prisma.Blog$featuredImageArgs<ExtArgs>
   galleryImages?: boolean | Prisma.Blog$galleryImagesArgs<ExtArgs>
   tags?: boolean | Prisma.Blog$tagsArgs<ExtArgs>
+  comments?: boolean | Prisma.Blog$commentsArgs<ExtArgs>
   likedByUsers?: boolean | Prisma.Blog$likedByUsersArgs<ExtArgs>
   favoritedByUsers?: boolean | Prisma.Blog$favoritedByUsersArgs<ExtArgs>
   _count?: boolean | Prisma.BlogCountOutputTypeDefaultArgs<ExtArgs>
@@ -1955,6 +2120,7 @@ export type $BlogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     featuredImage: Prisma.$ImagePayload<ExtArgs> | null
     galleryImages: Prisma.$ImagePayload<ExtArgs>[]
     tags: Prisma.$TagPayload<ExtArgs>[]
+    comments: Prisma.$CommentPayload<ExtArgs>[]
     likedByUsers: Prisma.$UserPayload<ExtArgs>[]
     favoritedByUsers: Prisma.$UserPayload<ExtArgs>[]
   }
@@ -2372,6 +2538,7 @@ export interface Prisma__BlogClient<T, Null = never, ExtArgs extends runtime.Typ
   featuredImage<T extends Prisma.Blog$featuredImageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$featuredImageArgs<ExtArgs>>): Prisma.Prisma__ImageClient<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   galleryImages<T extends Prisma.Blog$galleryImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$galleryImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tags<T extends Prisma.Blog$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  comments<T extends Prisma.Blog$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likedByUsers<T extends Prisma.Blog$likedByUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$likedByUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   favoritedByUsers<T extends Prisma.Blog$favoritedByUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$favoritedByUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2882,6 +3049,30 @@ export type Blog$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.TagScalarFieldEnum | Prisma.TagScalarFieldEnum[]
+}
+
+/**
+ * Blog.comments
+ */
+export type Blog$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Comment
+   */
+  select?: Prisma.CommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Comment
+   */
+  omit?: Prisma.CommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommentInclude<ExtArgs> | null
+  where?: Prisma.CommentWhereInput
+  orderBy?: Prisma.CommentOrderByWithRelationInput | Prisma.CommentOrderByWithRelationInput[]
+  cursor?: Prisma.CommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommentScalarFieldEnum | Prisma.CommentScalarFieldEnum[]
 }
 
 /**

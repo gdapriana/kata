@@ -33,9 +33,11 @@ model User {
   sessions       Session[]
   accounts       Account[]
   blogs          Blog[]    @relation("BlogAuthor")
+  comments       Comment[] @relation("CommentAuthor")
   uploadedImages Image[]   @relation("ImageUploader")
   likedBlogs     Blog[]    @relation("BlogLikes")
   favoritedBlogs Blog[]    @relation("BlogFavorites")
+  likedComments  Comment[] @relation("CommentLikes")
 
   @@unique([email])
   @@map("user")
@@ -154,6 +156,7 @@ model Blog {
   featuredImage    Image?     @relation("BlogFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
   galleryImages    Image[]    @relation("BlogGalleryImages")
   tags             Tag[]
+  comments         Comment[]
   likedByUsers     User[]     @relation("BlogLikes")
   favoritedByUsers User[]     @relation("BlogFavorites")
   likedCount       Int        @default(0)
@@ -169,4 +172,25 @@ model Blog {
   @@index([status])
   @@index([publishedAt])
   @@map("blog")
+}
+
+model Comment {
+  id           String    @id @default(uuid())
+  content      String
+  blogId       String
+  blog         Blog      @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  authorId     String
+  author       User      @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  parentId     String?
+  parent       Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      Comment[] @relation("CommentReplies")
+  likedByUsers User[]    @relation("CommentLikes")
+  likedCount   Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([blogId])
+  @@index([authorId])
+  @@index([parentId])
+  @@map("comment")
 }

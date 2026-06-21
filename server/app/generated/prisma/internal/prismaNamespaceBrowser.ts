@@ -58,7 +58,8 @@ export const ModelName = {
   Category: 'Category',
   Tag: 'Tag',
   Image: 'Image',
-  Blog: 'Blog'
+  Blog: 'Blog',
+  Comment: 'Comment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,6 +197,20 @@ export const BlogScalarFieldEnum = {
 } as const
 
 export type BlogScalarFieldEnum = (typeof BlogScalarFieldEnum)[keyof typeof BlogScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  blogId: 'blogId',
+  authorId: 'authorId',
+  parentId: 'parentId',
+  likedCount: 'likedCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const SortOrder = {
