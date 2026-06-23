@@ -8,9 +8,14 @@ import blogRoute from "./routes/blog.route.js";
 
 export const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://kataclient.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true, 
     allowedHeaders: ["Content-Type", "Authorization"],
