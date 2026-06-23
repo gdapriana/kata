@@ -7,6 +7,16 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 import blogRoute from "./routes/blog.route.js";
 
 export const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true, 
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.all('/api/auth/{*any}', toNodeHandler(auth));
 app.use(express.json());
 

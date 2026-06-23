@@ -1,0 +1,11 @@
+@base_url = http://localhost:8000/api
+
+### sign up
+POST {{base_url}}/auth/sign-up/email
+Content-Type: application/json
+
+{
+    "name": "gedeapriana",
+    "email": "gedeapriana@gmail.com",
+    "password": "gedeapriana"
+}
