@@ -1,9 +1,6 @@
-import type { BlogValidationGetOne } from "../validation/blog.validation.ts";
-import type {
-  BlogGetOneResponseType,
-  BlogResponse,
-} from "../helpers/responses/blog.response.ts";
-import { blogGetOne } from "../helpers/get/blog.get.ts";
+import type { BlogValidationGetOne } from "../validation/blog.validation.js";
+import type { BlogGetOneResponseType } from "../helpers/responses/blog.response.js";
+import { blogGetOne } from "../helpers/get/blog.get.js";
 
 export class BlogService {
   static GetOne = async (data: BlogValidationGetOne): Promise<BlogGetOneResponseType> => {
