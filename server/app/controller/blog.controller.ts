@@ -1,7 +1,7 @@
-import {type Request, type Response, type NextFunction} from "express"
-import type { BlogGetOneResponseType } from "../helpers/responses/blog.response.ts";
-import { BlogService } from "../services/blog.service.ts";
-import { SuccessResponse } from "../helpers/responses/success.response.ts";
+import { type Request, type Response, type NextFunction } from "express"
+import type { BlogGetOneResponseType } from "../helpers/responses/blog.response.js";
+import { BlogService } from "../services/blog.service.js";
+import { SuccessResponse } from "../helpers/responses/success.response.js";
 
 export class BlogController {
   static GetOne = async (req: Request, res: Response, next: NextFunction) => {
