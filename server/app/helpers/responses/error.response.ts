@@ -1,6 +1,6 @@
 import { httpStatus } from "../constants/status.constant.js";
-import type { ErrorResponse } from "../types/error.type.ts";
-import type { Schema } from "../types/schema.type.ts";
+import type { ErrorResponse } from "../types/error.type.js";
+import type { Schema } from "../types/schema.type.js";
 
 export class ErrorResponseMessage {
   static BAD_REQUEST(reason: string): ErrorResponse {

@@ -1,4 +1,4 @@
-import type { Schema } from "../types/schema.type.ts";
+import type { Schema } from "../types/schema.type.js";
 
 export class SuccessResponseApi {
   static QUERY(schema: Schema) {

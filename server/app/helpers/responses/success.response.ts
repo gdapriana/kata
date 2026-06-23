@@ -1,6 +1,6 @@
 import { SuccessResponseApi } from "./api.response.js";
-import type { Schema } from "../types/schema.type.ts";
-import type { ApiResponse } from "../types/api.type.ts";
+import type { Schema } from "../types/schema.type.js";
+import type { ApiResponse } from "../types/api.type.js";
 
 export class SuccessResponse {
   static QUERY = (schema: Schema, result: any): ApiResponse => {

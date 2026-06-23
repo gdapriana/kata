@@ -1,17 +1,17 @@
 import {
   BlogValidation,
   type BlogValidationGetOne,
-} from "../../validation/blog.validation.ts";
-import { prismaClient } from "../../database/db.ts";
-import { Validation } from "../../validation/validation.ts";
+} from "../../validation/blog.validation.js";
+import { prismaClient } from "../../database/db.js";
+import { Validation } from "../../validation/validation.js";
 import {
   ErrorResponseMessage,
   ResponseError,
-} from "../responses/error.response.ts";
+} from "../responses/error.response.js";
 import {
   type BlogGetOneResponseType,
   BlogResponse,
-} from "../responses/blog.response.ts";
+} from "../responses/blog.response.js";
 
 export const blogGetOne = (data: BlogValidationGetOne): Promise<BlogGetOneResponseType> => {
   return prismaClient.$transaction(async (tx) => {
@@ -20,8 +20,8 @@ export const blogGetOne = (data: BlogValidationGetOne): Promise<BlogGetOneRespon
       where: {
         ...(validatedData.by === "id"
           ? {
-              id: data.value,
-            }
+            id: data.value,
+          }
           : { slug: data.value }),
       },
       select: BlogResponse.GetOne,
