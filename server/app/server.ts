@@ -3,8 +3,8 @@ import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import cookieParser from "cookie-parser";
 import { auth } from "./lib/auth.js";
-import { errorMiddleware } from "./middleware/error.middleware.ts";
-import blogRoute from "./routes/blog.route.ts";
+import { errorMiddleware } from "./middleware/error.middleware.js";
+import blogRoute from "./routes/blog.route.js";
 
 export const app = express();
 app.all('/api/auth/{*any}', toNodeHandler(auth));
