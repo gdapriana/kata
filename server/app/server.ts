@@ -8,6 +8,9 @@ import blogRoute from "./routes/blog.route.js";
 
 export const app = express();
 
+
+app.all('/api/auth/{*any}', toNodeHandler(auth));
+
 const allowedOrigins = [
   "http://localhost:3000",
   "https://kataclient.vercel.app",
@@ -23,7 +26,6 @@ app.use(
   })
 );
 
-app.all('/api/auth/{*any}', toNodeHandler(auth));
 app.use(express.json());
 
 app.get("/", (req, res, next) => {
