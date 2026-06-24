@@ -1,12 +1,15 @@
-import {Geist_Mono, DM_Sans, EB_Garamond } from "next/font/google"
+import { Geist_Mono, DM_Sans, EB_Garamond } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-const ebGaramondHeading = EB_Garamond({subsets:['latin'],variable:'--font-heading'});
+const ebGaramondHeading = EB_Garamond({
+  subsets: ["latin"],
+  variable: "--font-heading",
+})
 
-const dmSans = DM_Sans({subsets:['latin'],variable:'--font-sans'})
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -22,12 +25,16 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", dmSans.variable, ebGaramondHeading.variable)}
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        dmSans.variable,
+        ebGaramondHeading.variable
+      )}
     >
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )

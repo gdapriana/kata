@@ -1,115 +1,133 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowRight } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+} from "lucide-react"
+import { authClient } from "@/lib/auth-client"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import Link from "next/link"
 
 export default function Page() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter()
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
 
     if (!name.trim()) {
-      setError("Name is required");
-      return;
+      setError("Name is required")
+      return
     }
     if (!email.trim()) {
-      setError("Email is required");
-      return;
+      setError("Email is required")
+      return
     }
     if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
+      setError("Password must be at least 8 characters")
+      return
     }
 
     try {
-      setLoading(true);
+      setLoading(true)
       const res = await authClient.signUp.email({
         email,
         password,
         name,
         callbackURL: "/",
-      });
+      })
 
       if (res?.error) {
-        setError(res.error.message || "An unexpected error occurred during sign up.");
+        setError(
+          res.error.message || "An unexpected error occurred during sign up."
+        )
       } else {
-        setSuccess("Account created successfully! Redirecting...");
+        setSuccess("Account created successfully! Redirecting...")
         setTimeout(() => {
-          router.push("/");
-          router.refresh();
-        }, 1500);
+          router.push("/")
+          router.refresh()
+        }, 1500)
       }
     } catch (err: any) {
-      setError(err?.message || "Something went wrong. Please try again.");
+      setError(err?.message || "Something went wrong. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleGoogleSignUp = async () => {
-    setError(null);
-    setSuccess(null);
+    setError(null)
+    setSuccess(null)
     try {
-      setGoogleLoading(true);
+      setGoogleLoading(true)
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/",
-      });
+      })
     } catch (err: any) {
-      setError(err?.message || "Failed to sign up with Google.");
-      setGoogleLoading(false);
+      setError(err?.message || "Failed to sign up with Google.")
+      setGoogleLoading(false)
     }
-  };
+  }
 
   return (
     <main className="flex min-h-svh items-center justify-center bg-background p-4 sm:p-6 md:p-8">
       <div className="relative w-full max-w-md">
         {/* Decorative background glow */}
         <div className="absolute -top-12 -left-12 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-12 -right-12 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -right-12 -bottom-12 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
 
-        <Card className="border border-border/80 bg-card/60 backdrop-blur-md shadow-2xl">
+        <Card className="border border-border/80 bg-card/60 shadow-2xl backdrop-blur-md">
           <CardHeader className="space-y-1.5 pb-6 text-center">
             <CardTitle className="font-heading text-3xl font-semibold tracking-tight text-foreground">
               Create an account
             </CardTitle>
             <CardDescription className="text-muted-foreground/90">
-              Enter your details below to create your account or sign up with Google
+              Enter your details below to create your account or sign up with
+              Google
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-4">
             {error && (
-              <div 
-                className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20 animate-in fade-in slide-in-from-top-2 duration-200" 
+              <div
+                className="animate-in rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive duration-200 fade-in slide-in-from-top-2"
                 role="alert"
               >
                 {error}
               </div>
             )}
-            
+
             {success && (
-              <div 
-                className="rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-600 border border-emerald-500/20 dark:text-emerald-400 animate-in fade-in slide-in-from-top-2 duration-200" 
+              <div
+                className="animate-in rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3 text-sm text-emerald-600 duration-200 fade-in slide-in-from-top-2 dark:text-emerald-400"
                 role="alert"
               >
                 {success}
@@ -121,12 +139,16 @@ export default function Page() {
               type="button"
               disabled={loading || googleLoading}
               onClick={handleGoogleSignUp}
-              className="w-full flex items-center justify-center gap-2 hover:bg-muted/80 transition-colors"
+              className="flex w-full items-center justify-center gap-2 transition-colors hover:bg-muted/80"
             >
               {googleLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               ) : (
-                <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  className="h-4 w-4 shrink-0"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path
                     fill="#EA4335"
                     d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.29 2.691 1.258 6.612l3.992 3.153z"
@@ -152,7 +174,7 @@ export default function Page() {
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-border" />
               </div>
-              <span className="relative bg-card px-3 text-xs text-muted-foreground uppercase tracking-wider">
+              <span className="relative bg-card px-3 text-xs tracking-wider text-muted-foreground uppercase">
                 Or continue with
               </span>
             </div>
@@ -161,7 +183,7 @@ export default function Page() {
               <div className="space-y-1.5">
                 <Label htmlFor="name">Full Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
+                  <User className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground/70" />
                   <Input
                     id="name"
                     name="name"
@@ -172,7 +194,7 @@ export default function Page() {
                     disabled={loading || googleLoading}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="pl-9 bg-background/50"
+                    className="bg-background/50 pl-9"
                   />
                 </div>
               </div>
@@ -180,7 +202,7 @@ export default function Page() {
               <div className="space-y-1.5">
                 <Label htmlFor="email">Email address</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
+                  <Mail className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground/70" />
                   <Input
                     id="email"
                     name="email"
@@ -191,7 +213,7 @@ export default function Page() {
                     disabled={loading || googleLoading}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-9 bg-background/50"
+                    className="bg-background/50 pl-9"
                   />
                 </div>
               </div>
@@ -199,7 +221,7 @@ export default function Page() {
               <div className="space-y-1.5">
                 <Label htmlFor="new-password">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
+                  <Lock className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground/70" />
                   <Input
                     id="new-password"
                     name="new-password"
@@ -210,7 +232,7 @@ export default function Page() {
                     disabled={loading || googleLoading}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-9 pr-9 bg-background/50"
+                    className="bg-background/50 pr-9 pl-9"
                   />
                   <Button
                     type="button"
@@ -218,10 +240,14 @@ export default function Page() {
                     size="icon"
                     disabled={loading || googleLoading}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-1.5 top-1.5 h-6 w-6 text-muted-foreground hover:text-foreground"
+                    className="absolute top-1.5 right-1.5 h-6 w-6 text-muted-foreground hover:text-foreground"
                     title={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-3.5 w-3.5" />
+                    ) : (
+                      <Eye className="h-3.5 w-3.5" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -229,7 +255,7 @@ export default function Page() {
               <Button
                 type="submit"
                 disabled={loading || googleLoading}
-                className="w-full mt-2 font-medium flex items-center justify-center gap-1.5 cursor-pointer shadow-lg hover:shadow-primary/10 transition-all duration-200"
+                className="mt-2 flex w-full cursor-pointer items-center justify-center gap-1.5 font-medium shadow-lg transition-all duration-200 hover:shadow-primary/10"
               >
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -243,12 +269,12 @@ export default function Page() {
             </form>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-2 pt-6 pb-6 text-center text-xs text-muted-foreground border-t border-border/50">
+          <CardFooter className="flex flex-col gap-2 border-t border-border/50 pt-6 pb-6 text-center text-xs text-muted-foreground">
             <div>
               Already have an account?{" "}
               <Link
                 href="/sign-in"
-                className="text-primary hover:underline font-medium hover:text-primary/95 transition-colors"
+                className="font-medium text-primary transition-colors hover:text-primary/95 hover:underline"
               >
                 Sign In
               </Link>
@@ -257,5 +283,5 @@ export default function Page() {
         </Card>
       </div>
     </main>
-  );
+  )
 }
