@@ -26,4 +26,9 @@ export const auth = betterAuth({
             partitioned: process.env.NODE_ENV === "production",
         },
     },
+    account: {
+        accountLinking: {
+            enabled: true
+        }
+    }
 });
