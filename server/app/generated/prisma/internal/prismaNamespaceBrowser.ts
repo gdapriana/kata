@@ -192,6 +192,7 @@ export const BlogScalarFieldEnum = {
   featuredImageId: 'featuredImageId',
   likedCount: 'likedCount',
   favoriteCount: 'favoriteCount',
+  views: 'views',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

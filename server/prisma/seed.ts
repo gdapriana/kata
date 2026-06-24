@@ -189,9 +189,10 @@ async function main() {
     // Choose 2 to 5 random tags
     const blogTags = faker.helpers.arrayElements(tags, { min: 2, max: 5 });
 
-    // Choose 1 to 3 random users who liked/favorited this blog
+    // Choose 1 to 3 random users who liked/favorited/viewed this blog
     const randomLikers = faker.helpers.arrayElements(users, { min: 0, max: 5 });
     const randomFavoriters = faker.helpers.arrayElements(users, { min: 0, max: 3 });
+    const randomViewers = faker.helpers.arrayElements(users, { min: 1, max: 8 });
 
     // Choose random status
     const statusOptions = [BlogStatus.PUBLISHED, BlogStatus.PUBLISHED, BlogStatus.PUBLISHED, BlogStatus.DRAFT, BlogStatus.ARCHIVED];
@@ -218,8 +219,12 @@ async function main() {
         favoritedByUsers: {
           connect: randomFavoriters.map(u => ({ id: u.id })),
         },
+        viewedByUsers: {
+          connect: randomViewers.map(u => ({ id: u.id })),
+        },
         likedCount: randomLikers.length,
         favoriteCount: randomFavoriters.length,
+        views: faker.number.int({ min: randomViewers.length + 15, max: 1200 }),
       },
     });
     blogs.push(blog);

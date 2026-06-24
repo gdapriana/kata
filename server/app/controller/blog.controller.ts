@@ -13,4 +13,14 @@ export class BlogController {
       next(e)
     }
   }
+
+  static GetAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await BlogService.GetAll(req.query as any);
+      const response = SuccessResponse.QUERY("blog", result);
+      res.status(response.statusCode).json(response);
+    } catch (e) {
+      next(e)
+    }
+  }
 }

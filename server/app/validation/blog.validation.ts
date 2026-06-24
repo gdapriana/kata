@@ -24,6 +24,7 @@ export class BlogValidation {
         "updatedAt",
         "publishedAt",
         "title",
+        "views",
         "likedCount",
         "favoriteCount",
       ])

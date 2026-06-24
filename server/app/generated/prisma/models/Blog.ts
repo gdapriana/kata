@@ -30,12 +30,14 @@ export type BlogAvgAggregateOutputType = {
   readTime: number | null
   likedCount: number | null
   favoriteCount: number | null
+  views: number | null
 }
 
 export type BlogSumAggregateOutputType = {
   readTime: number | null
   likedCount: number | null
   favoriteCount: number | null
+  views: number | null
 }
 
 export type BlogMinAggregateOutputType = {
@@ -51,6 +53,7 @@ export type BlogMinAggregateOutputType = {
   featuredImageId: string | null
   likedCount: number | null
   favoriteCount: number | null
+  views: number | null
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +72,7 @@ export type BlogMaxAggregateOutputType = {
   featuredImageId: string | null
   likedCount: number | null
   favoriteCount: number | null
+  views: number | null
   publishedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -87,6 +91,7 @@ export type BlogCountAggregateOutputType = {
   featuredImageId: number
   likedCount: number
   favoriteCount: number
+  views: number
   publishedAt: number
   createdAt: number
   updatedAt: number
@@ -98,12 +103,14 @@ export type BlogAvgAggregateInputType = {
   readTime?: true
   likedCount?: true
   favoriteCount?: true
+  views?: true
 }
 
 export type BlogSumAggregateInputType = {
   readTime?: true
   likedCount?: true
   favoriteCount?: true
+  views?: true
 }
 
 export type BlogMinAggregateInputType = {
@@ -119,6 +126,7 @@ export type BlogMinAggregateInputType = {
   featuredImageId?: true
   likedCount?: true
   favoriteCount?: true
+  views?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -137,6 +145,7 @@ export type BlogMaxAggregateInputType = {
   featuredImageId?: true
   likedCount?: true
   favoriteCount?: true
+  views?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -155,6 +164,7 @@ export type BlogCountAggregateInputType = {
   featuredImageId?: true
   likedCount?: true
   favoriteCount?: true
+  views?: true
   publishedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -260,6 +270,7 @@ export type BlogGroupByOutputType = {
   featuredImageId: string | null
   likedCount: number
   favoriteCount: number
+  views: number
   publishedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -301,6 +312,7 @@ export type BlogWhereInput = {
   featuredImageId?: Prisma.StringNullableFilter<"Blog"> | string | null
   likedCount?: Prisma.IntFilter<"Blog"> | number
   favoriteCount?: Prisma.IntFilter<"Blog"> | number
+  views?: Prisma.IntFilter<"Blog"> | number
   publishedAt?: Prisma.DateTimeNullableFilter<"Blog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
@@ -312,6 +324,7 @@ export type BlogWhereInput = {
   comments?: Prisma.CommentListRelationFilter
   likedByUsers?: Prisma.UserListRelationFilter
   favoritedByUsers?: Prisma.UserListRelationFilter
+  viewedByUsers?: Prisma.UserListRelationFilter
 }
 
 export type BlogOrderByWithRelationInput = {
@@ -327,6 +340,7 @@ export type BlogOrderByWithRelationInput = {
   featuredImageId?: Prisma.SortOrderInput | Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -338,6 +352,7 @@ export type BlogOrderByWithRelationInput = {
   comments?: Prisma.CommentOrderByRelationAggregateInput
   likedByUsers?: Prisma.UserOrderByRelationAggregateInput
   favoritedByUsers?: Prisma.UserOrderByRelationAggregateInput
+  viewedByUsers?: Prisma.UserOrderByRelationAggregateInput
 }
 
 export type BlogWhereUniqueInput = Prisma.AtLeast<{
@@ -356,6 +371,7 @@ export type BlogWhereUniqueInput = Prisma.AtLeast<{
   featuredImageId?: Prisma.StringNullableFilter<"Blog"> | string | null
   likedCount?: Prisma.IntFilter<"Blog"> | number
   favoriteCount?: Prisma.IntFilter<"Blog"> | number
+  views?: Prisma.IntFilter<"Blog"> | number
   publishedAt?: Prisma.DateTimeNullableFilter<"Blog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
@@ -367,6 +383,7 @@ export type BlogWhereUniqueInput = Prisma.AtLeast<{
   comments?: Prisma.CommentListRelationFilter
   likedByUsers?: Prisma.UserListRelationFilter
   favoritedByUsers?: Prisma.UserListRelationFilter
+  viewedByUsers?: Prisma.UserListRelationFilter
 }, "id" | "slug">
 
 export type BlogOrderByWithAggregationInput = {
@@ -382,6 +399,7 @@ export type BlogOrderByWithAggregationInput = {
   featuredImageId?: Prisma.SortOrderInput | Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -408,6 +426,7 @@ export type BlogScalarWhereWithAggregatesInput = {
   featuredImageId?: Prisma.StringNullableWithAggregatesFilter<"Blog"> | string | null
   likedCount?: Prisma.IntWithAggregatesFilter<"Blog"> | number
   favoriteCount?: Prisma.IntWithAggregatesFilter<"Blog"> | number
+  views?: Prisma.IntWithAggregatesFilter<"Blog"> | number
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Blog"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Blog"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Blog"> | Date | string
@@ -423,6 +442,7 @@ export type BlogCreateInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -434,6 +454,7 @@ export type BlogCreateInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateInput = {
@@ -449,6 +470,7 @@ export type BlogUncheckedCreateInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -457,6 +479,7 @@ export type BlogUncheckedCreateInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUpdateInput = {
@@ -469,6 +492,7 @@ export type BlogUpdateInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -480,6 +504,7 @@ export type BlogUpdateInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateInput = {
@@ -495,6 +520,7 @@ export type BlogUncheckedUpdateInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -503,6 +529,7 @@ export type BlogUncheckedUpdateInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogCreateManyInput = {
@@ -518,6 +545,7 @@ export type BlogCreateManyInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -533,6 +561,7 @@ export type BlogUpdateManyMutationInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -551,6 +580,7 @@ export type BlogUncheckedUpdateManyInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -579,6 +609,7 @@ export type BlogCountOrderByAggregateInput = {
   featuredImageId?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -588,6 +619,7 @@ export type BlogAvgOrderByAggregateInput = {
   readTime?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type BlogMaxOrderByAggregateInput = {
@@ -603,6 +635,7 @@ export type BlogMaxOrderByAggregateInput = {
   featuredImageId?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -621,6 +654,7 @@ export type BlogMinOrderByAggregateInput = {
   featuredImageId?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -630,6 +664,7 @@ export type BlogSumOrderByAggregateInput = {
   readTime?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type BlogScalarRelationFilter = {
@@ -656,6 +691,12 @@ export type BlogCreateNestedManyWithoutFavoritedByUsersInput = {
   connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
 }
 
+export type BlogCreateNestedManyWithoutViewedByUsersInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput> | Prisma.BlogCreateWithoutViewedByUsersInput[] | Prisma.BlogUncheckedCreateWithoutViewedByUsersInput[]
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutViewedByUsersInput | Prisma.BlogCreateOrConnectWithoutViewedByUsersInput[]
+  connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+}
+
 export type BlogUncheckedCreateNestedManyWithoutAuthorInput = {
   create?: Prisma.XOR<Prisma.BlogCreateWithoutAuthorInput, Prisma.BlogUncheckedCreateWithoutAuthorInput> | Prisma.BlogCreateWithoutAuthorInput[] | Prisma.BlogUncheckedCreateWithoutAuthorInput[]
   connectOrCreate?: Prisma.BlogCreateOrConnectWithoutAuthorInput | Prisma.BlogCreateOrConnectWithoutAuthorInput[]
@@ -672,6 +713,12 @@ export type BlogUncheckedCreateNestedManyWithoutLikedByUsersInput = {
 export type BlogUncheckedCreateNestedManyWithoutFavoritedByUsersInput = {
   create?: Prisma.XOR<Prisma.BlogCreateWithoutFavoritedByUsersInput, Prisma.BlogUncheckedCreateWithoutFavoritedByUsersInput> | Prisma.BlogCreateWithoutFavoritedByUsersInput[] | Prisma.BlogUncheckedCreateWithoutFavoritedByUsersInput[]
   connectOrCreate?: Prisma.BlogCreateOrConnectWithoutFavoritedByUsersInput | Prisma.BlogCreateOrConnectWithoutFavoritedByUsersInput[]
+  connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+}
+
+export type BlogUncheckedCreateNestedManyWithoutViewedByUsersInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput> | Prisma.BlogCreateWithoutViewedByUsersInput[] | Prisma.BlogUncheckedCreateWithoutViewedByUsersInput[]
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutViewedByUsersInput | Prisma.BlogCreateOrConnectWithoutViewedByUsersInput[]
   connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
 }
 
@@ -715,6 +762,19 @@ export type BlogUpdateManyWithoutFavoritedByUsersNestedInput = {
   deleteMany?: Prisma.BlogScalarWhereInput | Prisma.BlogScalarWhereInput[]
 }
 
+export type BlogUpdateManyWithoutViewedByUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput> | Prisma.BlogCreateWithoutViewedByUsersInput[] | Prisma.BlogUncheckedCreateWithoutViewedByUsersInput[]
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutViewedByUsersInput | Prisma.BlogCreateOrConnectWithoutViewedByUsersInput[]
+  upsert?: Prisma.BlogUpsertWithWhereUniqueWithoutViewedByUsersInput | Prisma.BlogUpsertWithWhereUniqueWithoutViewedByUsersInput[]
+  set?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  disconnect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  delete?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  update?: Prisma.BlogUpdateWithWhereUniqueWithoutViewedByUsersInput | Prisma.BlogUpdateWithWhereUniqueWithoutViewedByUsersInput[]
+  updateMany?: Prisma.BlogUpdateManyWithWhereWithoutViewedByUsersInput | Prisma.BlogUpdateManyWithWhereWithoutViewedByUsersInput[]
+  deleteMany?: Prisma.BlogScalarWhereInput | Prisma.BlogScalarWhereInput[]
+}
+
 export type BlogUncheckedUpdateManyWithoutAuthorNestedInput = {
   create?: Prisma.XOR<Prisma.BlogCreateWithoutAuthorInput, Prisma.BlogUncheckedCreateWithoutAuthorInput> | Prisma.BlogCreateWithoutAuthorInput[] | Prisma.BlogUncheckedCreateWithoutAuthorInput[]
   connectOrCreate?: Prisma.BlogCreateOrConnectWithoutAuthorInput | Prisma.BlogCreateOrConnectWithoutAuthorInput[]
@@ -752,6 +812,19 @@ export type BlogUncheckedUpdateManyWithoutFavoritedByUsersNestedInput = {
   connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
   update?: Prisma.BlogUpdateWithWhereUniqueWithoutFavoritedByUsersInput | Prisma.BlogUpdateWithWhereUniqueWithoutFavoritedByUsersInput[]
   updateMany?: Prisma.BlogUpdateManyWithWhereWithoutFavoritedByUsersInput | Prisma.BlogUpdateManyWithWhereWithoutFavoritedByUsersInput[]
+  deleteMany?: Prisma.BlogScalarWhereInput | Prisma.BlogScalarWhereInput[]
+}
+
+export type BlogUncheckedUpdateManyWithoutViewedByUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput> | Prisma.BlogCreateWithoutViewedByUsersInput[] | Prisma.BlogUncheckedCreateWithoutViewedByUsersInput[]
+  connectOrCreate?: Prisma.BlogCreateOrConnectWithoutViewedByUsersInput | Prisma.BlogCreateOrConnectWithoutViewedByUsersInput[]
+  upsert?: Prisma.BlogUpsertWithWhereUniqueWithoutViewedByUsersInput | Prisma.BlogUpsertWithWhereUniqueWithoutViewedByUsersInput[]
+  set?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  disconnect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  delete?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  connect?: Prisma.BlogWhereUniqueInput | Prisma.BlogWhereUniqueInput[]
+  update?: Prisma.BlogUpdateWithWhereUniqueWithoutViewedByUsersInput | Prisma.BlogUpdateWithWhereUniqueWithoutViewedByUsersInput[]
+  updateMany?: Prisma.BlogUpdateManyWithWhereWithoutViewedByUsersInput | Prisma.BlogUpdateManyWithWhereWithoutViewedByUsersInput[]
   deleteMany?: Prisma.BlogScalarWhereInput | Prisma.BlogScalarWhereInput[]
 }
 
@@ -943,6 +1016,7 @@ export type BlogCreateWithoutAuthorInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -953,6 +1027,7 @@ export type BlogCreateWithoutAuthorInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutAuthorInput = {
@@ -967,6 +1042,7 @@ export type BlogUncheckedCreateWithoutAuthorInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -975,6 +1051,7 @@ export type BlogUncheckedCreateWithoutAuthorInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutAuthorInput = {
@@ -997,6 +1074,7 @@ export type BlogCreateWithoutLikedByUsersInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1007,6 +1085,7 @@ export type BlogCreateWithoutLikedByUsersInput = {
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutLikedByUsersInput = {
@@ -1022,6 +1101,7 @@ export type BlogUncheckedCreateWithoutLikedByUsersInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1029,6 +1109,7 @@ export type BlogUncheckedCreateWithoutLikedByUsersInput = {
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutLikedByUsersInput = {
@@ -1046,6 +1127,7 @@ export type BlogCreateWithoutFavoritedByUsersInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1056,6 +1138,7 @@ export type BlogCreateWithoutFavoritedByUsersInput = {
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutFavoritedByUsersInput = {
@@ -1071,6 +1154,7 @@ export type BlogUncheckedCreateWithoutFavoritedByUsersInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1078,11 +1162,65 @@ export type BlogUncheckedCreateWithoutFavoritedByUsersInput = {
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutFavoritedByUsersInput = {
   where: Prisma.BlogWhereUniqueInput
   create: Prisma.XOR<Prisma.BlogCreateWithoutFavoritedByUsersInput, Prisma.BlogUncheckedCreateWithoutFavoritedByUsersInput>
+}
+
+export type BlogCreateWithoutViewedByUsersInput = {
+  id?: string
+  title: string
+  slug: string
+  content: string
+  excerpt?: string | null
+  readTime: number
+  status?: $Enums.BlogStatus
+  likedCount?: number
+  favoriteCount?: number
+  views?: number
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutBlogsInput
+  category: Prisma.CategoryCreateNestedOneWithoutBlogsInput
+  featuredImage?: Prisma.ImageCreateNestedOneWithoutFeaturedInBlogsInput
+  galleryImages?: Prisma.ImageCreateNestedManyWithoutGalleryBlogsInput
+  tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
+  likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
+  favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+}
+
+export type BlogUncheckedCreateWithoutViewedByUsersInput = {
+  id?: string
+  title: string
+  slug: string
+  content: string
+  excerpt?: string | null
+  readTime: number
+  status?: $Enums.BlogStatus
+  authorId: string
+  categoryId: string
+  featuredImageId?: string | null
+  likedCount?: number
+  favoriteCount?: number
+  views?: number
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryImages?: Prisma.ImageUncheckedCreateNestedManyWithoutGalleryBlogsInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
+  likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
+  favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+}
+
+export type BlogCreateOrConnectWithoutViewedByUsersInput = {
+  where: Prisma.BlogWhereUniqueInput
+  create: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput>
 }
 
 export type BlogUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -1117,6 +1255,7 @@ export type BlogScalarWhereInput = {
   featuredImageId?: Prisma.StringNullableFilter<"Blog"> | string | null
   likedCount?: Prisma.IntFilter<"Blog"> | number
   favoriteCount?: Prisma.IntFilter<"Blog"> | number
+  views?: Prisma.IntFilter<"Blog"> | number
   publishedAt?: Prisma.DateTimeNullableFilter<"Blog"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Blog"> | Date | string
@@ -1154,6 +1293,22 @@ export type BlogUpdateManyWithWhereWithoutFavoritedByUsersInput = {
   data: Prisma.XOR<Prisma.BlogUpdateManyMutationInput, Prisma.BlogUncheckedUpdateManyWithoutFavoritedByUsersInput>
 }
 
+export type BlogUpsertWithWhereUniqueWithoutViewedByUsersInput = {
+  where: Prisma.BlogWhereUniqueInput
+  update: Prisma.XOR<Prisma.BlogUpdateWithoutViewedByUsersInput, Prisma.BlogUncheckedUpdateWithoutViewedByUsersInput>
+  create: Prisma.XOR<Prisma.BlogCreateWithoutViewedByUsersInput, Prisma.BlogUncheckedCreateWithoutViewedByUsersInput>
+}
+
+export type BlogUpdateWithWhereUniqueWithoutViewedByUsersInput = {
+  where: Prisma.BlogWhereUniqueInput
+  data: Prisma.XOR<Prisma.BlogUpdateWithoutViewedByUsersInput, Prisma.BlogUncheckedUpdateWithoutViewedByUsersInput>
+}
+
+export type BlogUpdateManyWithWhereWithoutViewedByUsersInput = {
+  where: Prisma.BlogScalarWhereInput
+  data: Prisma.XOR<Prisma.BlogUpdateManyMutationInput, Prisma.BlogUncheckedUpdateManyWithoutViewedByUsersInput>
+}
+
 export type BlogCreateWithoutCategoryInput = {
   id?: string
   title: string
@@ -1164,6 +1319,7 @@ export type BlogCreateWithoutCategoryInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1174,6 +1330,7 @@ export type BlogCreateWithoutCategoryInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutCategoryInput = {
@@ -1188,6 +1345,7 @@ export type BlogUncheckedCreateWithoutCategoryInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1196,6 +1354,7 @@ export type BlogUncheckedCreateWithoutCategoryInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutCategoryInput = {
@@ -1234,6 +1393,7 @@ export type BlogCreateWithoutTagsInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1244,6 +1404,7 @@ export type BlogCreateWithoutTagsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutTagsInput = {
@@ -1259,6 +1420,7 @@ export type BlogUncheckedCreateWithoutTagsInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1266,6 +1428,7 @@ export type BlogUncheckedCreateWithoutTagsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutTagsInput = {
@@ -1299,6 +1462,7 @@ export type BlogCreateWithoutFeaturedImageInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1309,6 +1473,7 @@ export type BlogCreateWithoutFeaturedImageInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutFeaturedImageInput = {
@@ -1323,6 +1488,7 @@ export type BlogUncheckedCreateWithoutFeaturedImageInput = {
   categoryId: string
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1331,6 +1497,7 @@ export type BlogUncheckedCreateWithoutFeaturedImageInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutFeaturedImageInput = {
@@ -1353,6 +1520,7 @@ export type BlogCreateWithoutGalleryImagesInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1363,6 +1531,7 @@ export type BlogCreateWithoutGalleryImagesInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutGalleryImagesInput = {
@@ -1378,6 +1547,7 @@ export type BlogUncheckedCreateWithoutGalleryImagesInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1385,6 +1555,7 @@ export type BlogUncheckedCreateWithoutGalleryImagesInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutBlogInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutGalleryImagesInput = {
@@ -1434,6 +1605,7 @@ export type BlogCreateWithoutCommentsInput = {
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1444,6 +1616,7 @@ export type BlogCreateWithoutCommentsInput = {
   tags?: Prisma.TagCreateNestedManyWithoutBlogsInput
   likedByUsers?: Prisma.UserCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogUncheckedCreateWithoutCommentsInput = {
@@ -1459,6 +1632,7 @@ export type BlogUncheckedCreateWithoutCommentsInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1466,6 +1640,7 @@ export type BlogUncheckedCreateWithoutCommentsInput = {
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutBlogsInput
   likedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutLikedBlogsInput
   favoritedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutFavoritedBlogsInput
+  viewedByUsers?: Prisma.UserUncheckedCreateNestedManyWithoutViewedBlogsInput
 }
 
 export type BlogCreateOrConnectWithoutCommentsInput = {
@@ -1494,6 +1669,7 @@ export type BlogUpdateWithoutCommentsInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1504,6 +1680,7 @@ export type BlogUpdateWithoutCommentsInput = {
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutCommentsInput = {
@@ -1519,6 +1696,7 @@ export type BlogUncheckedUpdateWithoutCommentsInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1526,6 +1704,7 @@ export type BlogUncheckedUpdateWithoutCommentsInput = {
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogCreateManyAuthorInput = {
@@ -1540,6 +1719,7 @@ export type BlogCreateManyAuthorInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1555,6 +1735,7 @@ export type BlogUpdateWithoutAuthorInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1565,6 +1746,7 @@ export type BlogUpdateWithoutAuthorInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutAuthorInput = {
@@ -1579,6 +1761,7 @@ export type BlogUncheckedUpdateWithoutAuthorInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1587,6 +1770,7 @@ export type BlogUncheckedUpdateWithoutAuthorInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutAuthorInput = {
@@ -1601,6 +1785,7 @@ export type BlogUncheckedUpdateManyWithoutAuthorInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1616,6 +1801,7 @@ export type BlogUpdateWithoutLikedByUsersInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1626,6 +1812,7 @@ export type BlogUpdateWithoutLikedByUsersInput = {
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutLikedByUsersInput = {
@@ -1641,6 +1828,7 @@ export type BlogUncheckedUpdateWithoutLikedByUsersInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1648,6 +1836,7 @@ export type BlogUncheckedUpdateWithoutLikedByUsersInput = {
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutLikedByUsersInput = {
@@ -1663,6 +1852,7 @@ export type BlogUncheckedUpdateManyWithoutLikedByUsersInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1678,6 +1868,7 @@ export type BlogUpdateWithoutFavoritedByUsersInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1688,6 +1879,7 @@ export type BlogUpdateWithoutFavoritedByUsersInput = {
   tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutFavoritedByUsersInput = {
@@ -1703,6 +1895,7 @@ export type BlogUncheckedUpdateWithoutFavoritedByUsersInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1710,6 +1903,7 @@ export type BlogUncheckedUpdateWithoutFavoritedByUsersInput = {
   tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutFavoritedByUsersInput = {
@@ -1725,6 +1919,74 @@ export type BlogUncheckedUpdateManyWithoutFavoritedByUsersInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BlogUpdateWithoutViewedByUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
+  likedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutBlogsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutBlogsNestedInput
+  featuredImage?: Prisma.ImageUpdateOneWithoutFeaturedInBlogsNestedInput
+  galleryImages?: Prisma.ImageUpdateManyWithoutGalleryBlogsNestedInput
+  tags?: Prisma.TagUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
+  likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
+  favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+}
+
+export type BlogUncheckedUpdateWithoutViewedByUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryImages?: Prisma.ImageUncheckedUpdateManyWithoutGalleryBlogsNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutBlogsNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
+  likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
+  favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+}
+
+export type BlogUncheckedUpdateManyWithoutViewedByUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  likedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1742,6 +2004,7 @@ export type BlogCreateManyCategoryInput = {
   featuredImageId?: string | null
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1757,6 +2020,7 @@ export type BlogUpdateWithoutCategoryInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1767,6 +2031,7 @@ export type BlogUpdateWithoutCategoryInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutCategoryInput = {
@@ -1781,6 +2046,7 @@ export type BlogUncheckedUpdateWithoutCategoryInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1789,6 +2055,7 @@ export type BlogUncheckedUpdateWithoutCategoryInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutCategoryInput = {
@@ -1803,6 +2070,7 @@ export type BlogUncheckedUpdateManyWithoutCategoryInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1818,6 +2086,7 @@ export type BlogUpdateWithoutTagsInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1828,6 +2097,7 @@ export type BlogUpdateWithoutTagsInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutTagsInput = {
@@ -1843,6 +2113,7 @@ export type BlogUncheckedUpdateWithoutTagsInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1850,6 +2121,7 @@ export type BlogUncheckedUpdateWithoutTagsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutTagsInput = {
@@ -1865,6 +2137,7 @@ export type BlogUncheckedUpdateManyWithoutTagsInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1882,6 +2155,7 @@ export type BlogCreateManyFeaturedImageInput = {
   categoryId: string
   likedCount?: number
   favoriteCount?: number
+  views?: number
   publishedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1897,6 +2171,7 @@ export type BlogUpdateWithoutFeaturedImageInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1907,6 +2182,7 @@ export type BlogUpdateWithoutFeaturedImageInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutFeaturedImageInput = {
@@ -1921,6 +2197,7 @@ export type BlogUncheckedUpdateWithoutFeaturedImageInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1929,6 +2206,7 @@ export type BlogUncheckedUpdateWithoutFeaturedImageInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutFeaturedImageInput = {
@@ -1943,6 +2221,7 @@ export type BlogUncheckedUpdateManyWithoutFeaturedImageInput = {
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1958,6 +2237,7 @@ export type BlogUpdateWithoutGalleryImagesInput = {
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1968,6 +2248,7 @@ export type BlogUpdateWithoutGalleryImagesInput = {
   comments?: Prisma.CommentUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateWithoutGalleryImagesInput = {
@@ -1983,6 +2264,7 @@ export type BlogUncheckedUpdateWithoutGalleryImagesInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1990,6 +2272,7 @@ export type BlogUncheckedUpdateWithoutGalleryImagesInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutBlogNestedInput
   likedByUsers?: Prisma.UserUncheckedUpdateManyWithoutLikedBlogsNestedInput
   favoritedByUsers?: Prisma.UserUncheckedUpdateManyWithoutFavoritedBlogsNestedInput
+  viewedByUsers?: Prisma.UserUncheckedUpdateManyWithoutViewedBlogsNestedInput
 }
 
 export type BlogUncheckedUpdateManyWithoutGalleryImagesInput = {
@@ -2005,6 +2288,7 @@ export type BlogUncheckedUpdateManyWithoutGalleryImagesInput = {
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2021,6 +2305,7 @@ export type BlogCountOutputType = {
   comments: number
   likedByUsers: number
   favoritedByUsers: number
+  viewedByUsers: number
 }
 
 export type BlogCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2029,6 +2314,7 @@ export type BlogCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   comments?: boolean | BlogCountOutputTypeCountCommentsArgs
   likedByUsers?: boolean | BlogCountOutputTypeCountLikedByUsersArgs
   favoritedByUsers?: boolean | BlogCountOutputTypeCountFavoritedByUsersArgs
+  viewedByUsers?: boolean | BlogCountOutputTypeCountViewedByUsersArgs
 }
 
 /**
@@ -2076,6 +2362,13 @@ export type BlogCountOutputTypeCountFavoritedByUsersArgs<ExtArgs extends runtime
   where?: Prisma.UserWhereInput
 }
 
+/**
+ * BlogCountOutputType without action
+ */
+export type BlogCountOutputTypeCountViewedByUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
+
 
 export type BlogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2090,6 +2383,7 @@ export type BlogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   featuredImageId?: boolean
   likedCount?: boolean
   favoriteCount?: boolean
+  views?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2101,6 +2395,7 @@ export type BlogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   comments?: boolean | Prisma.Blog$commentsArgs<ExtArgs>
   likedByUsers?: boolean | Prisma.Blog$likedByUsersArgs<ExtArgs>
   favoritedByUsers?: boolean | Prisma.Blog$favoritedByUsersArgs<ExtArgs>
+  viewedByUsers?: boolean | Prisma.Blog$viewedByUsersArgs<ExtArgs>
   _count?: boolean | Prisma.BlogCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["blog"]>
 
@@ -2117,6 +2412,7 @@ export type BlogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   featuredImageId?: boolean
   likedCount?: boolean
   favoriteCount?: boolean
+  views?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2138,6 +2434,7 @@ export type BlogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   featuredImageId?: boolean
   likedCount?: boolean
   favoriteCount?: boolean
+  views?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -2159,12 +2456,13 @@ export type BlogSelectScalar = {
   featuredImageId?: boolean
   likedCount?: boolean
   favoriteCount?: boolean
+  views?: boolean
   publishedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BlogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "excerpt" | "readTime" | "status" | "authorId" | "categoryId" | "featuredImageId" | "likedCount" | "favoriteCount" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["blog"]>
+export type BlogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "excerpt" | "readTime" | "status" | "authorId" | "categoryId" | "featuredImageId" | "likedCount" | "favoriteCount" | "views" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["blog"]>
 export type BlogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -2174,6 +2472,7 @@ export type BlogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   comments?: boolean | Prisma.Blog$commentsArgs<ExtArgs>
   likedByUsers?: boolean | Prisma.Blog$likedByUsersArgs<ExtArgs>
   favoritedByUsers?: boolean | Prisma.Blog$favoritedByUsersArgs<ExtArgs>
+  viewedByUsers?: boolean | Prisma.Blog$viewedByUsersArgs<ExtArgs>
   _count?: boolean | Prisma.BlogCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BlogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2198,6 +2497,7 @@ export type $BlogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     comments: Prisma.$CommentPayload<ExtArgs>[]
     likedByUsers: Prisma.$UserPayload<ExtArgs>[]
     favoritedByUsers: Prisma.$UserPayload<ExtArgs>[]
+    viewedByUsers: Prisma.$UserPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2212,6 +2512,7 @@ export type $BlogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     featuredImageId: string | null
     likedCount: number
     favoriteCount: number
+    views: number
     publishedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -2617,6 +2918,7 @@ export interface Prisma__BlogClient<T, Null = never, ExtArgs extends runtime.Typ
   comments<T extends Prisma.Blog$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likedByUsers<T extends Prisma.Blog$likedByUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$likedByUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   favoritedByUsers<T extends Prisma.Blog$favoritedByUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$favoritedByUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  viewedByUsers<T extends Prisma.Blog$viewedByUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Blog$viewedByUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2658,6 +2960,7 @@ export interface BlogFieldRefs {
   readonly featuredImageId: Prisma.FieldRef<"Blog", 'String'>
   readonly likedCount: Prisma.FieldRef<"Blog", 'Int'>
   readonly favoriteCount: Prisma.FieldRef<"Blog", 'Int'>
+  readonly views: Prisma.FieldRef<"Blog", 'Int'>
   readonly publishedAt: Prisma.FieldRef<"Blog", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Blog", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Blog", 'DateTime'>
@@ -3180,6 +3483,30 @@ export type Blog$likedByUsersArgs<ExtArgs extends runtime.Types.Extensions.Inter
  * Blog.favoritedByUsers
  */
 export type Blog$favoritedByUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * Blog.viewedByUsers
+ */
+export type Blog$viewedByUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

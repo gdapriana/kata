@@ -38,6 +38,7 @@ model User {
   likedBlogs     Blog[]    @relation("BlogLikes")
   favoritedBlogs Blog[]    @relation("BlogFavorites")
   likedComments  Comment[] @relation("CommentLikes")
+  viewedBlogs    Blog[]    @relation("BlogViews")
 
   @@unique([email])
   @@map("user")
@@ -160,8 +161,10 @@ model Blog {
   comments         Comment[]
   likedByUsers     User[]     @relation("BlogLikes")
   favoritedByUsers User[]     @relation("BlogFavorites")
+  viewedByUsers    User[]     @relation("BlogViews")
   likedCount       Int        @default(0)
   favoriteCount    Int        @default(0)
+  views            Int        @default(0)
   publishedAt      DateTime?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt

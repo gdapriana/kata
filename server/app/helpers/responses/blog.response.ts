@@ -110,3 +110,6 @@ export class BlogResponse {
 export type BlogGetOneResponseType = Prisma.BlogGetPayload<{
     select: typeof BlogResponse.GetOne
 }>
+export type BlogGetAllResponseType = Prisma.BlogGetPayload<{
+    select: typeof BlogResponse.GetAll
+}>
