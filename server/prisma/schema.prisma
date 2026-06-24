@@ -147,6 +147,7 @@ model Blog {
   slug             String
   content          String
   excerpt          String?
+  readTime         Int
   status           BlogStatus @default(DRAFT)
   authorId         String
   author           User       @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: Cascade)

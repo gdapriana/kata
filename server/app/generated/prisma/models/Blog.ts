@@ -27,11 +27,13 @@ export type AggregateBlog = {
 }
 
 export type BlogAvgAggregateOutputType = {
+  readTime: number | null
   likedCount: number | null
   favoriteCount: number | null
 }
 
 export type BlogSumAggregateOutputType = {
+  readTime: number | null
   likedCount: number | null
   favoriteCount: number | null
 }
@@ -42,6 +44,7 @@ export type BlogMinAggregateOutputType = {
   slug: string | null
   content: string | null
   excerpt: string | null
+  readTime: number | null
   status: $Enums.BlogStatus | null
   authorId: string | null
   categoryId: string | null
@@ -59,6 +62,7 @@ export type BlogMaxAggregateOutputType = {
   slug: string | null
   content: string | null
   excerpt: string | null
+  readTime: number | null
   status: $Enums.BlogStatus | null
   authorId: string | null
   categoryId: string | null
@@ -76,6 +80,7 @@ export type BlogCountAggregateOutputType = {
   slug: number
   content: number
   excerpt: number
+  readTime: number
   status: number
   authorId: number
   categoryId: number
@@ -90,11 +95,13 @@ export type BlogCountAggregateOutputType = {
 
 
 export type BlogAvgAggregateInputType = {
+  readTime?: true
   likedCount?: true
   favoriteCount?: true
 }
 
 export type BlogSumAggregateInputType = {
+  readTime?: true
   likedCount?: true
   favoriteCount?: true
 }
@@ -105,6 +112,7 @@ export type BlogMinAggregateInputType = {
   slug?: true
   content?: true
   excerpt?: true
+  readTime?: true
   status?: true
   authorId?: true
   categoryId?: true
@@ -122,6 +130,7 @@ export type BlogMaxAggregateInputType = {
   slug?: true
   content?: true
   excerpt?: true
+  readTime?: true
   status?: true
   authorId?: true
   categoryId?: true
@@ -139,6 +148,7 @@ export type BlogCountAggregateInputType = {
   slug?: true
   content?: true
   excerpt?: true
+  readTime?: true
   status?: true
   authorId?: true
   categoryId?: true
@@ -243,6 +253,7 @@ export type BlogGroupByOutputType = {
   slug: string
   content: string
   excerpt: string | null
+  readTime: number
   status: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -283,6 +294,7 @@ export type BlogWhereInput = {
   slug?: Prisma.StringFilter<"Blog"> | string
   content?: Prisma.StringFilter<"Blog"> | string
   excerpt?: Prisma.StringNullableFilter<"Blog"> | string | null
+  readTime?: Prisma.IntFilter<"Blog"> | number
   status?: Prisma.EnumBlogStatusFilter<"Blog"> | $Enums.BlogStatus
   authorId?: Prisma.StringFilter<"Blog"> | string
   categoryId?: Prisma.StringFilter<"Blog"> | string
@@ -308,6 +320,7 @@ export type BlogOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
+  readTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -336,6 +349,7 @@ export type BlogWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Blog"> | string
   content?: Prisma.StringFilter<"Blog"> | string
   excerpt?: Prisma.StringNullableFilter<"Blog"> | string | null
+  readTime?: Prisma.IntFilter<"Blog"> | number
   status?: Prisma.EnumBlogStatusFilter<"Blog"> | $Enums.BlogStatus
   authorId?: Prisma.StringFilter<"Blog"> | string
   categoryId?: Prisma.StringFilter<"Blog"> | string
@@ -361,6 +375,7 @@ export type BlogOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   excerpt?: Prisma.SortOrderInput | Prisma.SortOrder
+  readTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -386,6 +401,7 @@ export type BlogScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Blog"> | string
   content?: Prisma.StringWithAggregatesFilter<"Blog"> | string
   excerpt?: Prisma.StringNullableWithAggregatesFilter<"Blog"> | string | null
+  readTime?: Prisma.IntWithAggregatesFilter<"Blog"> | number
   status?: Prisma.EnumBlogStatusWithAggregatesFilter<"Blog"> | $Enums.BlogStatus
   authorId?: Prisma.StringWithAggregatesFilter<"Blog"> | string
   categoryId?: Prisma.StringWithAggregatesFilter<"Blog"> | string
@@ -403,6 +419,7 @@ export type BlogCreateInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -425,6 +442,7 @@ export type BlogUncheckedCreateInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -447,6 +465,7 @@ export type BlogUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -469,6 +488,7 @@ export type BlogUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -491,6 +511,7 @@ export type BlogCreateManyInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -508,6 +529,7 @@ export type BlogUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -522,6 +544,7 @@ export type BlogUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -549,6 +572,7 @@ export type BlogCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
+  readTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -561,6 +585,7 @@ export type BlogCountOrderByAggregateInput = {
 }
 
 export type BlogAvgOrderByAggregateInput = {
+  readTime?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
 }
@@ -571,6 +596,7 @@ export type BlogMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
+  readTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -588,6 +614,7 @@ export type BlogMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   excerpt?: Prisma.SortOrder
+  readTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
   authorId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -600,6 +627,7 @@ export type BlogMinOrderByAggregateInput = {
 }
 
 export type BlogSumOrderByAggregateInput = {
+  readTime?: Prisma.SortOrder
   likedCount?: Prisma.SortOrder
   favoriteCount?: Prisma.SortOrder
 }
@@ -911,6 +939,7 @@ export type BlogCreateWithoutAuthorInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -932,6 +961,7 @@ export type BlogUncheckedCreateWithoutAuthorInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   categoryId: string
   featuredImageId?: string | null
@@ -963,6 +993,7 @@ export type BlogCreateWithoutLikedByUsersInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -984,6 +1015,7 @@ export type BlogUncheckedCreateWithoutLikedByUsersInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1010,6 +1042,7 @@ export type BlogCreateWithoutFavoritedByUsersInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1031,6 +1064,7 @@ export type BlogUncheckedCreateWithoutFavoritedByUsersInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1076,6 +1110,7 @@ export type BlogScalarWhereInput = {
   slug?: Prisma.StringFilter<"Blog"> | string
   content?: Prisma.StringFilter<"Blog"> | string
   excerpt?: Prisma.StringNullableFilter<"Blog"> | string | null
+  readTime?: Prisma.IntFilter<"Blog"> | number
   status?: Prisma.EnumBlogStatusFilter<"Blog"> | $Enums.BlogStatus
   authorId?: Prisma.StringFilter<"Blog"> | string
   categoryId?: Prisma.StringFilter<"Blog"> | string
@@ -1125,6 +1160,7 @@ export type BlogCreateWithoutCategoryInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1146,6 +1182,7 @@ export type BlogUncheckedCreateWithoutCategoryInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   featuredImageId?: string | null
@@ -1193,6 +1230,7 @@ export type BlogCreateWithoutTagsInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1214,6 +1252,7 @@ export type BlogUncheckedCreateWithoutTagsInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1256,6 +1295,7 @@ export type BlogCreateWithoutFeaturedImageInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1277,6 +1317,7 @@ export type BlogUncheckedCreateWithoutFeaturedImageInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1308,6 +1349,7 @@ export type BlogCreateWithoutGalleryImagesInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1329,6 +1371,7 @@ export type BlogUncheckedCreateWithoutGalleryImagesInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1387,6 +1430,7 @@ export type BlogCreateWithoutCommentsInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   likedCount?: number
   favoriteCount?: number
@@ -1408,6 +1452,7 @@ export type BlogUncheckedCreateWithoutCommentsInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1445,6 +1490,7 @@ export type BlogUpdateWithoutCommentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1466,6 +1512,7 @@ export type BlogUncheckedUpdateWithoutCommentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1487,6 +1534,7 @@ export type BlogCreateManyAuthorInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   categoryId: string
   featuredImageId?: string | null
@@ -1503,6 +1551,7 @@ export type BlogUpdateWithoutAuthorInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1524,6 +1573,7 @@ export type BlogUncheckedUpdateWithoutAuthorInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1545,6 +1595,7 @@ export type BlogUncheckedUpdateManyWithoutAuthorInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1561,6 +1612,7 @@ export type BlogUpdateWithoutLikedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1582,6 +1634,7 @@ export type BlogUncheckedUpdateWithoutLikedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1603,6 +1656,7 @@ export type BlogUncheckedUpdateManyWithoutLikedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1620,6 +1674,7 @@ export type BlogUpdateWithoutFavoritedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1641,6 +1696,7 @@ export type BlogUncheckedUpdateWithoutFavoritedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1662,6 +1718,7 @@ export type BlogUncheckedUpdateManyWithoutFavoritedByUsersInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1679,6 +1736,7 @@ export type BlogCreateManyCategoryInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   featuredImageId?: string | null
@@ -1695,6 +1753,7 @@ export type BlogUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1716,6 +1775,7 @@ export type BlogUncheckedUpdateWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1737,6 +1797,7 @@ export type BlogUncheckedUpdateManyWithoutCategoryInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   featuredImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1753,6 +1814,7 @@ export type BlogUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1774,6 +1836,7 @@ export type BlogUncheckedUpdateWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1795,6 +1858,7 @@ export type BlogUncheckedUpdateManyWithoutTagsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1812,6 +1876,7 @@ export type BlogCreateManyFeaturedImageInput = {
   slug: string
   content: string
   excerpt?: string | null
+  readTime: number
   status?: $Enums.BlogStatus
   authorId: string
   categoryId: string
@@ -1828,6 +1893,7 @@ export type BlogUpdateWithoutFeaturedImageInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1849,6 +1915,7 @@ export type BlogUncheckedUpdateWithoutFeaturedImageInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1870,6 +1937,7 @@ export type BlogUncheckedUpdateManyWithoutFeaturedImageInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1886,6 +1954,7 @@ export type BlogUpdateWithoutGalleryImagesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   likedCount?: Prisma.IntFieldUpdateOperationsInput | number
   favoriteCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1907,6 +1976,7 @@ export type BlogUncheckedUpdateWithoutGalleryImagesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1928,6 +1998,7 @@ export type BlogUncheckedUpdateManyWithoutGalleryImagesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   excerpt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumBlogStatusFieldUpdateOperationsInput | $Enums.BlogStatus
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2012,6 +2083,7 @@ export type BlogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   slug?: boolean
   content?: boolean
   excerpt?: boolean
+  readTime?: boolean
   status?: boolean
   authorId?: boolean
   categoryId?: boolean
@@ -2038,6 +2110,7 @@ export type BlogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   content?: boolean
   excerpt?: boolean
+  readTime?: boolean
   status?: boolean
   authorId?: boolean
   categoryId?: boolean
@@ -2058,6 +2131,7 @@ export type BlogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   content?: boolean
   excerpt?: boolean
+  readTime?: boolean
   status?: boolean
   authorId?: boolean
   categoryId?: boolean
@@ -2078,6 +2152,7 @@ export type BlogSelectScalar = {
   slug?: boolean
   content?: boolean
   excerpt?: boolean
+  readTime?: boolean
   status?: boolean
   authorId?: boolean
   categoryId?: boolean
@@ -2089,7 +2164,7 @@ export type BlogSelectScalar = {
   updatedAt?: boolean
 }
 
-export type BlogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "excerpt" | "status" | "authorId" | "categoryId" | "featuredImageId" | "likedCount" | "favoriteCount" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["blog"]>
+export type BlogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "excerpt" | "readTime" | "status" | "authorId" | "categoryId" | "featuredImageId" | "likedCount" | "favoriteCount" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["blog"]>
 export type BlogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -2130,6 +2205,7 @@ export type $BlogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     slug: string
     content: string
     excerpt: string | null
+    readTime: number
     status: $Enums.BlogStatus
     authorId: string
     categoryId: string
@@ -2575,6 +2651,7 @@ export interface BlogFieldRefs {
   readonly slug: Prisma.FieldRef<"Blog", 'String'>
   readonly content: Prisma.FieldRef<"Blog", 'String'>
   readonly excerpt: Prisma.FieldRef<"Blog", 'String'>
+  readonly readTime: Prisma.FieldRef<"Blog", 'Int'>
   readonly status: Prisma.FieldRef<"Blog", 'BlogStatus'>
   readonly authorId: Prisma.FieldRef<"Blog", 'String'>
   readonly categoryId: Prisma.FieldRef<"Blog", 'String'>
