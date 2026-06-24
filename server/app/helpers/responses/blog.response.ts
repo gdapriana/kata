@@ -60,6 +60,7 @@ export class BlogResponse {
         createdAt: true,
         likedCount: true,
         favoriteCount: true,
+        readTime: true,
         tags: {
             select: {
                 id: true,
