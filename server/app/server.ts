@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import { auth } from "./lib/auth.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 import blogRoute from "./routes/blog.route.js";
+import categoryRoute from "./routes/category.route.js";
+import userRoute from "./routes/user.route.js";
 
 export const app = express();
 
@@ -31,5 +33,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api/blogs", blogRoute);
+app.use("/api/categories", categoryRoute);
+app.use("/api/users", userRoute);
 app.use(errorMiddleware);
 

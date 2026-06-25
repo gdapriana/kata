@@ -18,7 +18,7 @@ export default function Hamburger() {
           <AlignJustify />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="z-99">
         <SheetHeader></SheetHeader>
         <nav className="flex flex-col items-stretch justify-start p-6 md:hidden">
           {NAV.map((item: NavType, idx: number) => (
@@ -26,7 +26,7 @@ export default function Hamburger() {
               <Link href={item.url}>{item.name}</Link>
             </Button>
           ))}
-          <div className="flex justify-center items-center mt-2">
+          <div className="mt-2 flex items-center justify-center">
             <Profile />
           </div>
         </nav>

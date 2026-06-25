@@ -31,6 +31,7 @@ export const errorMiddleware = async (
     return;
   }
 
+  console.error("Unhandled server error:", error);
   const { status, message } = ErrorResponseMessage.INTERNAL_SERVER_ERROR();
   res.status(status).json({ success: false, message });
 };

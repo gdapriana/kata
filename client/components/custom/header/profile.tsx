@@ -54,14 +54,14 @@ export default function Profile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="md:ml-4 cursor-pointer">
+        <Avatar className="cursor-pointer md:ml-4">
           <AvatarFallback>
             <User size={16} />
           </AvatarFallback>
           <AvatarImage src={sessionData.user.image || ""} />
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="w-40 z-99">
         <DropdownMenuGroup>
           <DropdownMenuItem className="justify-between">
             Create Story
@@ -69,18 +69,22 @@ export default function Profile() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
-          <DropdownMenuItem className="justify-between cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer justify-between">
             Profile
             <User />
           </DropdownMenuItem>
-          <DropdownMenuItem className="justify-between cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer justify-between">
             Setting
             <Settings />
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleSignOut} variant="destructive" className="justify-between cursor-pointer">
+          <DropdownMenuItem
+            onClick={handleSignOut}
+            variant="destructive"
+            className="cursor-pointer justify-between"
+          >
             Sign Out
             <LogOut />
           </DropdownMenuItem>
