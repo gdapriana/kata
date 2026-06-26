@@ -1,15 +1,15 @@
-import { prismaClient } from "../../database/db";
-import type { Prisma } from "../../generated/prisma/client";
+import { prismaClient } from "../../database/db.js";
+import type { Prisma } from "../../generated/prisma/client.js";
 import {
   CommentValidation,
   type CommentValidationGetAll,
-} from "../../validation/comment.validation";
-import { Validation } from "../../validation/validation";
+} from "../../validation/comment.validation.js";
+import { Validation } from "../../validation/validation.js";
 import {
   CommentResponse,
   type CommentGetAllResponseType,
-} from "../responses/comment.response";
-import type { Pagination } from "../types/pagination.type";
+} from "../responses/comment.response.js";
+import type { Pagination } from "../types/pagination.type.js";
 
 export const commentGetAll = (
   data: CommentValidationGetAll,
