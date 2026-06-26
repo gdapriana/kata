@@ -3,15 +3,15 @@ import {
   CommentValidation,
   type CommentValidationCreate,
 } from "../../validation/comment.validation";
-import { Validation } from "../../validation/validation";
+import { Validation } from "../../validation/validation.js";
 import {
   CommentResponse,
   type CommentCreateResponseType,
-} from "../responses/comment.response";
+} from "../responses/comment.response.js";
 import {
   ErrorResponseMessage,
   ResponseError,
-} from "../responses/error.response";
+} from "../responses/error.response.js";
 
 export const commentCreate = (
   data: CommentValidationCreate,

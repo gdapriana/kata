@@ -1,17 +1,17 @@
-import { prismaClient } from "../../database/db";
+import { prismaClient } from "../../database/db.js";
 import {
   CommentValidation,
   type CommentValidationDelete,
-} from "../../validation/comment.validation";
-import { Validation } from "../../validation/validation";
+} from "../../validation/comment.validation.js";
+import { Validation } from "../../validation/validation.js";
 import {
   CommentResponse,
   type CommentDeleteResponseType,
-} from "../responses/comment.response";
+} from "../responses/comment.response.js";
 import {
   ErrorResponseMessage,
   ResponseError,
-} from "../responses/error.response";
+} from "../responses/error.response.js";
 
 export const commentDelete = (
   data: CommentValidationDelete,
