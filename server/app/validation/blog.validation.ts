@@ -1,10 +1,12 @@
 import z from "zod";
 
 export class BlogValidation {
-  static GetOne = z.object({
-    by: z.enum(['id', 'slug']),
-    value: z.string()
-  }).strict()
+  static GetOne = z
+    .object({
+      by: z.enum(["id", "slug"]),
+      value: z.string(),
+    })
+    .strict();
 
   static GetAll = z.object({
     page: z.coerce.number().int().positive().default(1),
@@ -32,7 +34,7 @@ export class BlogValidation {
     sortOrder: z.enum(["asc", "desc"]).default("desc"),
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional(),
-  })
+  });
 
   static Create = z.object({
     title: z.string().trim().min(1).max(255),
@@ -50,25 +52,32 @@ export class BlogValidation {
     galleryImageIds: z.array(z.string()).optional(),
     tagIds: z.array(z.string()).optional(),
     publishedAt: z.coerce.date().optional(),
-  })
+  });
 
-  static Update = this.Create.partial().refine((data) => Object.keys(data).length > 0, {
-    message: "At least one field must be provided",
-  })
+  static Update = this.Create.partial().refine(
+    (data) => Object.keys(data).length > 0,
+    {
+      message: "At least one field must be provided",
+    },
+  );
 
-  static Delete = this.GetOne
+  static Delete = this.GetOne;
   static ToggleLiked = z.object({
     userId: z.string(),
-    blogId: z.string()
-  }).strict
+    blogId: z.string(),
+  }).strict;
 
-  static ToggleBookmarked = this.ToggleLiked
+  static ToggleBookmarked = this.ToggleLiked;
 }
 
-export type BlogValidationGetOne = z.infer<typeof BlogValidation.GetOne>
-export type BlogValidationGetAll = z.infer<typeof BlogValidation.GetAll>
-export type BlogValidationCreate = z.infer<typeof BlogValidation.Create>
-export type BlogValidationUpdate = z.infer<typeof BlogValidation.Update>
-export type BlogValidationDelete = z.infer<typeof BlogValidation.Delete>
-export type BlogValidationToggleLiked = z.infer<typeof BlogValidation.ToggleLiked>
-export type BlogValidationToggleBookmarked = z.infer<typeof BlogValidation.ToggleBookmarked>
+export type BlogValidationGetOne = z.infer<typeof BlogValidation.GetOne>;
+export type BlogValidationGetAll = z.infer<typeof BlogValidation.GetAll>;
+export type BlogValidationCreate = z.infer<typeof BlogValidation.Create>;
+export type BlogValidationUpdate = z.infer<typeof BlogValidation.Update>;
+export type BlogValidationDelete = z.infer<typeof BlogValidation.Delete>;
+export type BlogValidationToggleLiked = z.infer<
+  typeof BlogValidation.ToggleLiked
+>;
+export type BlogValidationToggleBookmarked = z.infer<
+  typeof BlogValidation.ToggleBookmarked
+>;

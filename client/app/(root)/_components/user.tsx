@@ -16,9 +16,9 @@ export default function TopUsers() {
   return (
     <main className="p-6">
       <div className="container">
-        <div className="relative overflow-hidden border-y py-20 bg-background">
-          <div className="absolute top-0 bottom-0 left-0 w-20 md:w-40 bg-gradient-to-r from-background via-background/70 to-transparent pointer-events-none z-10" />
-          <div className="absolute top-0 bottom-0 right-0 w-20 md:w-40 bg-gradient-to-l from-background via-background/70 to-transparent pointer-events-none z-10" />
+        <div className="relative overflow-hidden border-t py-20 bg-background">
+          <div className="absolute top-0 bottom-0 left-0 w-20 md:w-40 bg-linear-to-r from-background via-background/70 to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 right-0 w-20 md:w-40 bg-linear-to-l from-background via-background/70 to-transparent pointer-events-none z-10" />
 
           <header className="flex items-center justify-center mb-10">
             <h2 className="font-serif text-center text-xl font-bold">
@@ -56,7 +56,7 @@ export default function TopUsers() {
                       <AvatarImage src={user?.image || ""} className="object-cover grayscale" />
                     </Avatar>
                     <div className="text-center">
-                      <h4 className="font-serif font-bold text-sm truncate max-w-[110px]">
+                      <h4 className="font-serif font-bold text-sm truncate max-w-27.5">
                         {user.name}
                       </h4>
                       <span className="text-[11px] text-muted-foreground block font-medium mt-0.5">

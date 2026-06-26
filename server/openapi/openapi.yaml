@@ -267,7 +267,15 @@ paths:
           name: sort
           schema:
             type: string
-            enum: [name, createdAt, updatedAt, publishedAt, likedCount, favoriteCount]
+            enum:
+              [
+                name,
+                createdAt,
+                updatedAt,
+                publishedAt,
+                likedCount,
+                favoriteCount,
+              ]
             default: createdAt
         - $ref: "#/components/parameters/OrderParam"
         - $ref: "#/components/parameters/PageParam"

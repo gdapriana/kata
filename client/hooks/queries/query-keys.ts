@@ -24,3 +24,9 @@ export const userKeys = {
   detail: (by: "id" | "email", value: string) =>
     [...userKeys.details(), { by, value }] as const,
 }
+
+export const commentKeys = {
+  all: ["comments"] as const,
+  lists: () => [...commentKeys.all, "list"] as const,
+  list: (filters: any) => [...commentKeys.lists(), { filters }] as const,
+}

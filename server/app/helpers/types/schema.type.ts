@@ -1,6 +1,1 @@
-export type Schema =
-  | "user"
-  | "blog"
-  | "category"
-  | "tag"
-  | "image"
+export type Schema = "user" | "blog" | "category" | "tag" | "image" | "comment";

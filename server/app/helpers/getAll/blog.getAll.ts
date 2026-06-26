@@ -1,14 +1,22 @@
 import { prismaClient } from "../../database/db.js";
-import { BlogValidation, type BlogValidationGetAll } from "../../validation/blog.validation.js";
+import {
+  BlogValidation,
+  type BlogValidationGetAll,
+} from "../../validation/blog.validation.js";
 import { Validation } from "../../validation/validation.js";
-import { type BlogGetAllResponseType, BlogResponse } from "../responses/blog.response.js";
+import {
+  type BlogGetAllResponseType,
+  BlogResponse,
+} from "../responses/blog.response.js";
 import type { Pagination } from "../types/pagination.type.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
-export const blogGetAll = (data: BlogValidationGetAll): Promise<{ query: BlogGetAllResponseType[]; pagination: Pagination }> => {
+export const blogGetAll = (
+  data: BlogValidationGetAll,
+): Promise<{ query: BlogGetAllResponseType[]; pagination: Pagination }> => {
   return prismaClient.$transaction(async (tx) => {
     const validatedData = Validation.validate(BlogValidation.GetAll, data);
-    
+
     const where: Prisma.BlogWhereInput = {};
 
     if (validatedData.search) {

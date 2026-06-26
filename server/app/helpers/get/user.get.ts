@@ -13,22 +13,23 @@ import {
   UserResponse,
 } from "../responses/user.response.js";
 
-export const userGetOne = (data: UserValidationGetOne): Promise<UserGetOneResponseType> => {
+export const userGetOne = (
+  data: UserValidationGetOne,
+): Promise<UserGetOneResponseType> => {
   return prismaClient.$transaction(async (tx) => {
-    const validatedData = Validation.validate(UserValidation.GetOne, data)
+    const validatedData = Validation.validate(UserValidation.GetOne, data);
     const user = await tx.user.findUnique({
       where: {
         ...(validatedData.by === "id"
           ? {
-            id: data.value,
-          }
+              id: data.value,
+            }
           : { email: data.value }),
       },
       select: UserResponse.GetOne,
     });
 
-    if (!user)
-      throw new ResponseError(ErrorResponseMessage.NOT_FOUND("user"));
+    if (!user) throw new ResponseError(ErrorResponseMessage.NOT_FOUND("user"));
     return user;
-  })
-}
+  });
+};

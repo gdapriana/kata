@@ -7,25 +7,25 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 import blogRoute from "./routes/blog.route.js";
 import categoryRoute from "./routes/category.route.js";
 import userRoute from "./routes/user.route.js";
+import commentRoute from "./routes/comment.route.js";
 
 export const app = express();
-
 
 const allowedOrigins = [
   "http://localhost:3000",
   "https://kataclient.vercel.app",
-  "https://kataserver.vercel.app"
+  "https://kataserver.vercel.app",
 ];
 app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    credentials: true, 
-  })
+    credentials: true,
+  }),
 );
 
-app.all('/api/auth/{*any}', toNodeHandler(auth));
-app.use(cookieParser())
+app.all("/api/auth/{*any}", toNodeHandler(auth));
+app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res, next) => {
@@ -35,5 +35,5 @@ app.get("/", (req, res, next) => {
 app.use("/api/blogs", blogRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/users", userRoute);
+app.use("/api/comments", commentRoute);
 app.use(errorMiddleware);
-

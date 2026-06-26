@@ -12,7 +12,7 @@ async function main() {
   const preservedUserIds = [
     "by0RFL6KENnIL4d4rO2B4cbZsgATjffE",
     "dLVuGbNtjFouvr0adhg6o7pUKZRWoj3N",
-    "rVm7Aus0WsmM3s9inPX78PGmx3D2LEIc"
+    "rVm7Aus0WsmM3s9inPX78PGmx3D2LEIc",
   ];
 
   await prismaClient.comment.deleteMany({});
@@ -22,25 +22,27 @@ async function main() {
   await prismaClient.category.deleteMany({});
   await prismaClient.account.deleteMany({
     where: {
-      userId: { notIn: preservedUserIds }
-    }
+      userId: { notIn: preservedUserIds },
+    },
   });
   await prismaClient.session.deleteMany({
     where: {
-      userId: { notIn: preservedUserIds }
-    }
+      userId: { notIn: preservedUserIds },
+    },
   });
   await prismaClient.user.deleteMany({
     where: {
-      id: { notIn: preservedUserIds }
-    }
+      id: { notIn: preservedUserIds },
+    },
   });
   console.log("✅ Cleanup complete.");
 
   // 2. Hash default password
   const defaultPassword = "password123";
   const hashedPassword = await bcrypt.hash(defaultPassword, 10);
-  console.log(`🔑 Generated default password hash for password: "${defaultPassword}"`);
+  console.log(
+    `🔑 Generated default password hash for password: "${defaultPassword}"`,
+  );
 
   // 3. Populate preserved users or create if missing
   console.log("👤 Querying and ensuring preserved users...");
@@ -50,11 +52,13 @@ async function main() {
     const id = preservedUserIds[i];
     if (!id) continue;
     let user = await prismaClient.user.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!user) {
-      console.log(`Preserved user ${id} not found in DB. Creating a mock entry...`);
+      console.log(
+        `Preserved user ${id} not found in DB. Creating a mock entry...`,
+      );
       const email = `preserved${i + 1}@example.com`;
       const name = `Preserved User ${i + 1}`;
       user = await prismaClient.user.create({
@@ -115,7 +119,7 @@ async function main() {
     "Health & Wellness",
     "Travel & Adventure",
     "Finance & Business",
-    "Food & Culinary Arts"
+    "Food & Culinary Arts",
   ];
   const categories: any[] = [];
 
@@ -123,7 +127,9 @@ async function main() {
     const category = await prismaClient.category.create({
       data: {
         name,
-        slug: slugify.default ? slugify.default(name, { lower: true }) : slugify(name, { lower: true }),
+        slug: slugify.default
+          ? slugify.default(name, { lower: true })
+          : slugify(name, { lower: true }),
         description: faker.lorem.sentence(),
       },
     });
@@ -134,12 +140,26 @@ async function main() {
   // 5. Create 20 Tags
   console.log("🏷️ Seeding 20 Tags...");
   const tagNames = [
-    "React", "Node.js", "TypeScript", "Next.js", "Prisma",
-    "Artificial Intelligence", "Machine Learning", "Tailwind CSS",
-    "Healthy Lifestyle", "Fitness Journey", "Mental Health",
-    "Budget Traveling", "Solo Backpacker", "Investing 101",
-    "Personal Finance", "Cooking Hacks", "Gourmet Recipes",
-    "Web Development", "UI/UX Design", "Productivity Tips"
+    "React",
+    "Node.js",
+    "TypeScript",
+    "Next.js",
+    "Prisma",
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Tailwind CSS",
+    "Healthy Lifestyle",
+    "Fitness Journey",
+    "Mental Health",
+    "Budget Traveling",
+    "Solo Backpacker",
+    "Investing 101",
+    "Personal Finance",
+    "Cooking Hacks",
+    "Gourmet Recipes",
+    "Web Development",
+    "UI/UX Design",
+    "Productivity Tips",
   ];
   const tags: any[] = [];
 
@@ -147,7 +167,9 @@ async function main() {
     const tag = await prismaClient.tag.create({
       data: {
         name,
-        slug: slugify.default ? slugify.default(name, { lower: true }) : slugify(name, { lower: true }),
+        slug: slugify.default
+          ? slugify.default(name, { lower: true })
+          : slugify(name, { lower: true }),
       },
     });
     tags.push(tag);
@@ -158,7 +180,8 @@ async function main() {
   console.log("🖼️ Seeding 10 Images...");
   const images: any[] = [];
   for (let i = 0; i < 10; i++) {
-    const randomUser = users[faker.number.int({ min: 0, max: users.length - 1 })];
+    const randomUser =
+      users[faker.number.int({ min: 0, max: users.length - 1 })];
     const image = await prismaClient.image.create({
       data: {
         name: `Image ${i + 1}`,
@@ -176,27 +199,46 @@ async function main() {
   // 7. Create 20 Blogs
   console.log("📝 Seeding 20 Blogs...");
   const blogs: any[] = [];
-  
+
   for (let i = 1; i <= 20; i++) {
     const title = faker.lorem.sentence({ min: 4, max: 8 });
-    const rawSlug = slugify.default ? slugify.default(title, { lower: true }) : slugify(title, { lower: true });
+    const rawSlug = slugify.default
+      ? slugify.default(title, { lower: true })
+      : slugify(title, { lower: true });
     // Ensure uniqueness by adding index to slug
     const slug = `${rawSlug}-${i}`;
     const author = users[faker.number.int({ min: 0, max: users.length - 1 })];
-    const category = categories[faker.number.int({ min: 0, max: categories.length - 1 })];
-    const featuredImage = images[faker.number.int({ min: 0, max: images.length - 1 })];
-    
+    const category =
+      categories[faker.number.int({ min: 0, max: categories.length - 1 })];
+    const featuredImage =
+      images[faker.number.int({ min: 0, max: images.length - 1 })];
+
     // Choose 2 to 5 random tags
     const blogTags = faker.helpers.arrayElements(tags, { min: 2, max: 5 });
 
     // Choose 1 to 3 random users who liked/favorited/viewed this blog
     const randomLikers = faker.helpers.arrayElements(users, { min: 0, max: 5 });
-    const randomFavoriters = faker.helpers.arrayElements(users, { min: 0, max: 3 });
-    const randomViewers = faker.helpers.arrayElements(users, { min: 1, max: 8 });
+    const randomFavoriters = faker.helpers.arrayElements(users, {
+      min: 0,
+      max: 3,
+    });
+    const randomViewers = faker.helpers.arrayElements(users, {
+      min: 1,
+      max: 8,
+    });
 
     // Choose random status
-    const statusOptions = [BlogStatus.PUBLISHED, BlogStatus.PUBLISHED, BlogStatus.PUBLISHED, BlogStatus.DRAFT, BlogStatus.ARCHIVED];
-    const status = statusOptions[faker.number.int({ min: 0, max: statusOptions.length - 1 })];
+    const statusOptions = [
+      BlogStatus.PUBLISHED,
+      BlogStatus.PUBLISHED,
+      BlogStatus.PUBLISHED,
+      BlogStatus.DRAFT,
+      BlogStatus.ARCHIVED,
+    ];
+    const status =
+      statusOptions[
+        faker.number.int({ min: 0, max: statusOptions.length - 1 })
+      ];
 
     const blog = await prismaClient.blog.create({
       data: {
@@ -211,16 +253,16 @@ async function main() {
         featuredImageId: featuredImage.id,
         publishedAt: status === BlogStatus.PUBLISHED ? faker.date.past() : null,
         tags: {
-          connect: blogTags.map(t => ({ id: t.id })),
+          connect: blogTags.map((t) => ({ id: t.id })),
         },
         likedByUsers: {
-          connect: randomLikers.map(u => ({ id: u.id })),
+          connect: randomLikers.map((u) => ({ id: u.id })),
         },
         favoritedByUsers: {
-          connect: randomFavoriters.map(u => ({ id: u.id })),
+          connect: randomFavoriters.map((u) => ({ id: u.id })),
         },
         viewedByUsers: {
-          connect: randomViewers.map(u => ({ id: u.id })),
+          connect: randomViewers.map((u) => ({ id: u.id })),
         },
         likedCount: randomLikers.length,
         favoriteCount: randomFavoriters.length,
@@ -237,7 +279,7 @@ async function main() {
   for (let i = 0; i < 30; i++) {
     const blog = blogs[faker.number.int({ min: 0, max: blogs.length - 1 })];
     const author = users[faker.number.int({ min: 0, max: users.length - 1 })];
-    
+
     await prismaClient.comment.create({
       data: {
         content: faker.lorem.sentences({ min: 1, max: 3 }),

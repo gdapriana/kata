@@ -13,15 +13,17 @@ import {
   CategoryResponse,
 } from "../responses/category.response.js";
 
-export const categoryGetOne = (data: CategoryValidationGetOne): Promise<CategoryGetOneResponseType> => {
+export const categoryGetOne = (
+  data: CategoryValidationGetOne,
+): Promise<CategoryGetOneResponseType> => {
   return prismaClient.$transaction(async (tx) => {
-    const validatedData = Validation.validate(CategoryValidation.GetOne, data)
+    const validatedData = Validation.validate(CategoryValidation.GetOne, data);
     const category = await tx.category.findUnique({
       where: {
         ...(validatedData.by === "id"
           ? {
-            id: data.value,
-          }
+              id: data.value,
+            }
           : { slug: data.value }),
       },
       select: CategoryResponse.GetOne,
@@ -30,5 +32,5 @@ export const categoryGetOne = (data: CategoryValidationGetOne): Promise<Category
     if (!category)
       throw new ResponseError(ErrorResponseMessage.NOT_FOUND("category"));
     return category;
-  })
-}
+  });
+};

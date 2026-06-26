@@ -1,14 +1,22 @@
 import { prismaClient } from "../../database/db.js";
-import { UserValidation, type UserValidationGetAll } from "../../validation/user.validation.js";
+import {
+  UserValidation,
+  type UserValidationGetAll,
+} from "../../validation/user.validation.js";
 import { Validation } from "../../validation/validation.js";
-import { type UserGetAllResponseType, UserResponse } from "../responses/user.response.js";
+import {
+  type UserGetAllResponseType,
+  UserResponse,
+} from "../responses/user.response.js";
 import type { Pagination } from "../types/pagination.type.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
-export const userGetAll = (data: UserValidationGetAll): Promise<{ query: UserGetAllResponseType[]; pagination: Pagination }> => {
+export const userGetAll = (
+  data: UserValidationGetAll,
+): Promise<{ query: UserGetAllResponseType[]; pagination: Pagination }> => {
   return prismaClient.$transaction(async (tx) => {
     const validatedData = Validation.validate(UserValidation.GetAll, data);
-    
+
     const where: Prisma.UserWhereInput = {};
 
     if (validatedData.search) {
@@ -22,9 +30,10 @@ export const userGetAll = (data: UserValidationGetAll): Promise<{ query: UserGet
       where.role = validatedData.role;
     }
 
-    const orderBy = validatedData.sortBy === "blogsCount"
-      ? { blogs: { _count: validatedData.sortOrder } }
-      : { [validatedData.sortBy]: validatedData.sortOrder };
+    const orderBy =
+      validatedData.sortBy === "blogsCount"
+        ? { blogs: { _count: validatedData.sortOrder } }
+        : { [validatedData.sortBy]: validatedData.sortOrder };
 
     const skip = (validatedData.page - 1) * validatedData.limit;
     const take = validatedData.limit;

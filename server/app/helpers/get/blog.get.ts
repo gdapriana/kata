@@ -13,15 +13,17 @@ import {
   BlogResponse,
 } from "../responses/blog.response.js";
 
-export const blogGetOne = (data: BlogValidationGetOne): Promise<BlogGetOneResponseType> => {
+export const blogGetOne = (
+  data: BlogValidationGetOne,
+): Promise<BlogGetOneResponseType> => {
   return prismaClient.$transaction(async (tx) => {
-    const validatedData = Validation.validate(BlogValidation.GetOne, data)
+    const validatedData = Validation.validate(BlogValidation.GetOne, data);
     const product = await tx.blog.findUnique({
       where: {
         ...(validatedData.by === "id"
           ? {
-            id: data.value,
-          }
+              id: data.value,
+            }
           : { slug: data.value }),
       },
       select: BlogResponse.GetOne,
@@ -30,5 +32,5 @@ export const blogGetOne = (data: BlogValidationGetOne): Promise<BlogGetOneRespon
     if (!product)
       throw new ResponseError(ErrorResponseMessage.NOT_FOUND("blog"));
     return product;
-  })
-}
+  });
+};

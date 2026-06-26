@@ -46,10 +46,46 @@ export async function getAllBlogs(params: GetBlogsParams = {}) {
 
 export async function getBlog(by: "id" | "slug", value: string) {
   const url = `${SERVER_URL}/api/blogs/get?by=${by}&value=${value}`
-  const res = await fetch(url)
+  const res = await fetch(url, {
+    credentials: "include",
+  })
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
     throw new Error(errorData.message || "Failed to fetch blog")
+  }
+  return res.json()
+}
+
+export async function toggleLikeBlog(blogId: string) {
+  const url = `${SERVER_URL}/api/blogs/like`
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ blogId }),
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to toggle like")
+  }
+  return res.json()
+}
+
+export async function toggleBookmarkBlog(blogId: string) {
+  const url = `${SERVER_URL}/api/blogs/bookmark`
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ blogId }),
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to toggle bookmark")
   }
   return res.json()
 }

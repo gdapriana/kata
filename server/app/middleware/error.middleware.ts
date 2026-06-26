@@ -1,6 +1,9 @@
 import type { Response, Request, NextFunction } from "express";
 import { ZodError } from "zod";
-import { ErrorResponseMessage, ResponseError } from "../helpers/responses/error.response.js";
+import {
+  ErrorResponseMessage,
+  ResponseError,
+} from "../helpers/responses/error.response.js";
 
 export const errorMiddleware = async (
   error: Error,
@@ -9,13 +12,11 @@ export const errorMiddleware = async (
   next: NextFunction,
 ) => {
   if (error instanceof ResponseError) {
-    res
-      .status(error.data.status)
-      .json({
-        success: false,
-        message: error.data.message,
-        statusCode: error.data.status,
-      });
+    res.status(error.data.status).json({
+      success: false,
+      message: error.data.message,
+      statusCode: error.data.status,
+    });
     return;
   }
 
