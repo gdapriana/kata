@@ -8,7 +8,7 @@ const HeroCanvas = dynamic(() => import("./hero-canvas"), {
   ssr: false,
   loading: () => (
     <div className="relative flex h-[350px] w-full items-center justify-center md:h-[450px]">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
     </div>
   ),
 })
