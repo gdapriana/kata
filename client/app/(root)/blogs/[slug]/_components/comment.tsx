@@ -224,7 +224,7 @@ function CommentItem({
   const [replySubmitting, setReplySubmitting] = useState(false)
 
   const isOwner = sessionUserId === comment.authorId
-  const canReply = depth < 3 // limit reply indentation levels to prevent UI squishing
+  const canReply = depth < 3 
 
   const handleReplySubmitLocal = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -271,13 +271,11 @@ function CommentItem({
       className={`relative group ${depth > 0 ? "ml-6 pl-4 border-l mt-4" : ""}`}
     >
       <div className="flex gap-3">
-        {/* Author Avatar */}
         <Avatar className="h-8 w-8 border shrink-0">
           <AvatarImage src={comment.author?.image || ""} alt={comment.author?.name} />
           <AvatarFallback className="text-xs bg-muted">U</AvatarFallback>
         </Avatar>
 
-        {/* Comment Body */}
         <div className="flex-1 space-y-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs">
@@ -287,7 +285,6 @@ function CommentItem({
               </span>
             </div>
             
-            {/* Delete button */}
             {isOwner && (
               <Button
                 variant="ghost"
@@ -306,7 +303,6 @@ function CommentItem({
             {comment.content}
           </p>
 
-          {/* Action triggers */}
           {canReply && (
             <div className="flex items-center gap-3 pt-1">
               <button

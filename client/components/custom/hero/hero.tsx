@@ -1,6 +1,17 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import Image from "next/image"
+import dynamic from "next/dynamic"
+
+const HeroCanvas = dynamic(() => import("./hero-canvas"), {
+  ssr: false,
+  loading: () => (
+    <div className="relative flex h-[350px] w-full items-center justify-center md:h-[450px]">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+    </div>
+  ),
+})
 
 export default function Hero() {
   return (
@@ -24,14 +35,7 @@ export default function Hero() {
             </div>
           </div>
           <div className="md:w-1/2">
-            <Image
-              src="https://images.unsplash.com/photo-1595411425732-e69c1abe2763?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="hero"
-              width={500}
-              height={800}
-              className="aspect-square w-full"
-              priority
-            />
+            <HeroCanvas scale={0.8} />
           </div>
         </div>
       </div>

@@ -69,9 +69,11 @@ export default function Profile() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer justify-between">
+          <DropdownMenuItem asChild className="cursor-pointer justify-between">
+            <Link href="/profile">
             Profile
             <User />
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer justify-between">
             Setting
