@@ -1,8 +1,8 @@
-import { prismaClient } from "../../database/db";
+import { prismaClient } from "../../database/db.js";
 import {
   CommentValidation,
   type CommentValidationCreate,
-} from "../../validation/comment.validation";
+} from "../../validation/comment.validation.js";
 import { Validation } from "../../validation/validation.js";
 import {
   CommentResponse,
