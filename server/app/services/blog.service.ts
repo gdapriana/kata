@@ -1,6 +1,7 @@
 import type {
   BlogValidationGetOne,
   BlogValidationGetAll,
+  BlogValidationCreate,
 } from "../validation/blog.validation.js"
 import type {
   BlogGetOneResponseType,
@@ -11,6 +12,7 @@ import { blogGetAll } from "../helpers/getAll/blog.getAll.js"
 import type { Pagination } from "../helpers/types/pagination.type.js"
 import { prismaClient } from "../database/db.js"
 import { ResponseError, ErrorResponseMessage } from "../helpers/responses/error.response.js"
+import slugify from "slugify"
 
 export class BlogService {
   static GetOne = async (
@@ -158,5 +160,118 @@ export class BlogService {
         return { bookmarked: true, favoriteCount: updated.favoriteCount }
       }
     })
+  }
+
+  static GetSaved = async (
+    data: BlogValidationGetAll,
+    userId: string
+  ) => {
+    return blogGetAll(data, userId, {
+      favoritedByUsers: {
+        some: {
+          id: userId,
+        },
+      },
+    })
+  }
+
+  static GetLiked = async (
+    data: BlogValidationGetAll,
+    userId: string
+  ) => {
+    return blogGetAll(data, userId, {
+      likedByUsers: {
+        some: {
+          id: userId,
+        },
+      },
+    })
+  }
+
+  static Create = async (
+    data: BlogValidationCreate,
+    authorId: string
+  ) => {
+    const category = await prismaClient.category.findUnique({
+      where: { id: data.categoryId },
+      select: { id: true },
+    })
+    if (!category) {
+      throw new ResponseError(ErrorResponseMessage.NOT_FOUND("category" as any))
+    }
+
+    const slug = slugify(`${data.slug}-${Date.now()}`)
+
+    const existingBlog = await prismaClient.blog.findUnique({
+      where: { slug },
+      select: { id: true },
+    })
+    if (existingBlog) {
+      throw new ResponseError(ErrorResponseMessage.ALREADY_EXISTS("blog" as any))
+    }
+
+    const wordCount = data.content.trim().split(/\s+/).length
+    const readTime = Math.max(1, Math.ceil(wordCount / 200))
+
+    const blog = await prismaClient.blog.create({
+      data: {
+        title: data.title,
+        slug,
+        content: data.content,
+        excerpt: data.excerpt,
+        status: data.status,
+        readTime,
+        authorId,
+        categoryId: data.categoryId,
+        featuredImageId: data.featuredImageId,
+        publishedAt: data.status === "PUBLISHED" ? (data.publishedAt || new Date()) : null,
+        tags: data.tags && data.tags.length > 0 ? {
+          connectOrCreate: data.tags.map(tagName => {
+            const cleanTagSlug = tagName
+              .toLowerCase()
+              .trim()
+              .replace(/[^\w\s-]/g, "")
+              .replace(/[\s_]+/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-+/, "")
+              .replace(/-+$/, "")
+            return {
+              where: { slug: cleanTagSlug },
+              create: { name: tagName.trim(), slug: cleanTagSlug }
+            }
+          })
+        } : undefined,
+        galleryImages: data.galleryImageIds && data.galleryImageIds.length > 0 ? {
+          connect: data.galleryImageIds.map(id => ({ id })),
+        } : undefined,
+      },
+    })
+
+    return blog
+  }
+
+  static Delete = async (
+    id: string,
+    userId: string,
+    userRole: string
+  ) => {
+    const blog = await prismaClient.blog.findUnique({
+      where: { id },
+      select: { id: true, authorId: true },
+    })
+
+    if (!blog) {
+      throw new ResponseError(ErrorResponseMessage.NOT_FOUND("blog" as any))
+    }
+
+    if (blog.authorId !== userId && userRole !== "ADMIN") {
+      throw new ResponseError(ErrorResponseMessage.FORBIDDEN())
+    }
+
+    await prismaClient.blog.delete({
+      where: { id },
+    })
+
+    return { id }
   }
 }

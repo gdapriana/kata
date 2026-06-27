@@ -22,21 +22,25 @@ export default function StatusState({
   actionHref,
   onRetry,
 }: StatusStateProps) {
-  
   // Custom styling and icons depending on type
   const config = {
     error: {
       icon: <AlertCircle className="h-8 w-8 text-destructive" />,
       title: title || "An error occurred",
-      message: message || "We had trouble loading this content. Please check your connection and try again.",
+      message:
+        message ||
+        "We had trouble loading this content. Please check your connection and try again.",
       colorClass: "bg-destructive/10 border-destructive/20 text-destructive",
       iconBg: "bg-destructive/10 border-destructive/20",
     },
     "not-found": {
       icon: <Search className="h-8 w-8 text-amber-600 dark:text-amber-400" />,
       title: title || "Content not found",
-      message: message || "The item you are looking for doesn't exist, was deleted, or has been moved.",
-      colorClass: "bg-amber-500/5 border-amber-500/10 text-amber-600 dark:text-amber-400",
+      message:
+        message ||
+        "The item you are looking for doesn't exist, was deleted, or has been moved.",
+      colorClass:
+        "bg-amber-500/5 border-amber-500/10 text-amber-600 dark:text-amber-400",
       iconBg: "bg-amber-500/10 border-amber-500/20",
     },
     empty: {
@@ -53,11 +57,18 @@ export default function StatusState({
       initial={{ opacity: 0, y: 15, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -15, scale: 0.98 }}
-      transition={{ duration: 0.4, type: "spring", stiffness: 200, damping: 20 }}
+      transition={{
+        duration: 0.4,
+        type: "spring",
+        stiffness: 200,
+        damping: 20,
+      }}
       className="mx-auto flex max-w-md flex-col items-center justify-center rounded-2xl border bg-card p-8 text-center shadow-lg backdrop-blur-xs"
     >
       {/* Icon Container */}
-      <div className={`mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border ${config.iconBg}`}>
+      <div
+        className={`mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border ${config.iconBg}`}
+      >
         {config.icon}
       </div>
 
@@ -72,8 +83,8 @@ export default function StatusState({
       {/* Actions */}
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         {onRetry && (
-          <Button 
-            onClick={onRetry} 
+          <Button
+            onClick={onRetry}
             variant="default"
             className="group flex items-center gap-2"
           >
@@ -81,7 +92,7 @@ export default function StatusState({
             Try Again
           </Button>
         )}
-        
+
         {actionHref && actionLabel && (
           <Button asChild variant="outline" className="flex items-center gap-2">
             <Link href={actionHref}>

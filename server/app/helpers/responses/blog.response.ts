@@ -59,6 +59,7 @@ export class BlogResponse {
     updatedAt: true,
     createdAt: true,
     likedCount: true,
+    status: true,
     favoriteCount: true,
     readTime: true,
     tags: {

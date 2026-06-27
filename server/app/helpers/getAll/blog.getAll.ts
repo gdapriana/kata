@@ -13,11 +13,18 @@ import { Prisma } from "../../generated/prisma/client.js";
 
 export const blogGetAll = (
   data: BlogValidationGetAll,
-): Promise<{ query: BlogGetAllResponseType[]; pagination: Pagination }> => {
+  userId?: string,
+  extraWhere?: Prisma.BlogWhereInput
+): Promise<{
+  query: (BlogGetAllResponseType & { liked?: boolean; bookmarked?: boolean })[];
+  pagination: Pagination;
+}> => {
   return prismaClient.$transaction(async (tx) => {
     const validatedData = Validation.validate(BlogValidation.GetAll, data);
 
-    const where: Prisma.BlogWhereInput = {};
+    const where: Prisma.BlogWhereInput = {
+      ...extraWhere,
+    };
 
     if (validatedData.search) {
       where.OR = [
@@ -83,8 +90,36 @@ export const blogGetAll = (
     const hasNext = validatedData.page < totalPages;
     const hasPrev = validatedData.page > 1;
 
+    let queryResult = blogs as (BlogGetAllResponseType & { liked?: boolean; bookmarked?: boolean })[];
+
+    if (userId && blogs.length > 0) {
+      const likedBlogs = await tx.blog.findMany({
+        where: {
+          id: { in: blogs.map((b) => b.id) },
+          likedByUsers: { some: { id: userId } },
+        },
+        select: { id: true },
+      });
+      const likedIds = new Set(likedBlogs.map((b) => b.id));
+
+      const bookmarkedBlogs = await tx.blog.findMany({
+        where: {
+          id: { in: blogs.map((b) => b.id) },
+          favoritedByUsers: { some: { id: userId } },
+        },
+        select: { id: true },
+      });
+      const bookmarkedIds = new Set(bookmarkedBlogs.map((b) => b.id));
+
+      queryResult = blogs.map((blog) => ({
+        ...blog,
+        liked: likedIds.has(blog.id),
+        bookmarked: bookmarkedIds.has(blog.id),
+      }));
+    }
+
     return {
-      query: blogs,
+      query: queryResult,
       pagination: {
         page: validatedData.page,
         take,

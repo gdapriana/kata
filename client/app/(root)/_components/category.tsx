@@ -1,13 +1,13 @@
-'use client'
+"use client"
 import { Spinner } from "@/components/ui/spinner"
 import Link from "next/link"
 import { useCategories } from "@/hooks/queries/use-categories"
 import { Button } from "@/components/ui/button"
 
 export default function TopCategories() {
-  const {data: categories, isLoading} = useCategories({
+  const { data: categories, isLoading } = useCategories({
     limit: 10,
-    sortBy: "blogsCount"
+    sortBy: "blogsCount",
   })
   return (
     <div className="flex flex-col items-stretch justify-start">
@@ -26,9 +26,7 @@ export default function TopCategories() {
           categories &&
           categories?.result?.query?.map((category: any, idx: number) => (
             <Button variant="secondary" asChild key={idx}>
-              <Link
-                href={`/categories/${category.slug}`}
-              >{category.name}</Link>
+              <Link href={`/categories/${category.slug}`}>{category.name}</Link>
             </Button>
           ))}
       </div>

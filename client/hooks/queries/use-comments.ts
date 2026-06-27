@@ -1,16 +1,21 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { 
-  getComments, 
-  createComment, 
-  deleteComment, 
-  type GetCommentsParams 
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query"
+import {
+  getComments,
+  createComment,
+  deleteComment,
+  type GetCommentsParams,
 } from "@/lib/api/comment-api"
 import { commentKeys } from "./query-keys"
 
 export function useComments(params: Omit<GetCommentsParams, "page">) {
   return useInfiniteQuery({
     queryKey: commentKeys.list(params),
-    queryFn: ({ pageParam = 1 }) => getComments({ ...params, page: pageParam as number }),
+    queryFn: ({ pageParam = 1 }) =>
+      getComments({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const pagination = lastPage?.result?.pagination || lastPage?.pagination

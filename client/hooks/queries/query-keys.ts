@@ -5,6 +5,10 @@ export const blogKeys = {
   details: () => [...blogKeys.all, "detail"] as const,
   detail: (by: "id" | "slug", value: string) =>
     [...blogKeys.details(), { by, value }] as const,
+  savedLists: () => [...blogKeys.all, "saved"] as const,
+  savedList: (filters: any) => [...blogKeys.savedLists(), { filters }] as const,
+  likedLists: () => [...blogKeys.all, "liked"] as const,
+  likedList: (filters: any) => [...blogKeys.likedLists(), { filters }] as const,
 }
 
 export const categoryKeys = {
@@ -29,4 +33,8 @@ export const commentKeys = {
   all: ["comments"] as const,
   lists: () => [...commentKeys.all, "list"] as const,
   list: (filters: any) => [...commentKeys.lists(), { filters }] as const,
+}
+
+export const imageKeys = {
+  all: ["images"] as const,
 }

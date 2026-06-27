@@ -3,37 +3,38 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Trash2, 
-  CornerDownRight, 
-  Loader2, 
+import {
+  Trash2,
+  CornerDownRight,
+  Loader2,
   MessageSquare,
   Lock,
-  ArrowDown
+  ArrowDown,
 } from "lucide-react"
 
 import { authClient } from "@/lib/auth-client"
-import { 
-  useComments, 
-  useCreateComment, 
-  useDeleteComment 
+import {
+  useComments,
+  useCreateComment,
+  useDeleteComment,
 } from "@/hooks/queries/use-comments"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Comment({ blogId }: { blogId: string }) {
   const router = useRouter()
-  const { data: sessionData, isPending: isSessionPending } = authClient.useSession()
+  const { data: sessionData, isPending: isSessionPending } =
+    authClient.useSession()
   const sessionUser = sessionData?.user
 
   // Queries
-  const { 
-    data: commentPages, 
-    isLoading, 
-    isError, 
-    hasNextPage, 
-    fetchNextPage, 
-    isFetchingNextPage 
+  const {
+    data: commentPages,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
   } = useComments({ blogId, limit: 3 })
 
   // Mutations
@@ -92,13 +93,15 @@ export default function Comment({ blogId }: { blogId: string }) {
     }
   }
 
-  const allComments = commentPages?.pages.flatMap((page) => page?.result?.query || []) || []
-  const totalComments = commentPages?.pages[0]?.result?.pagination?.totalItems || 0
+  const allComments =
+    commentPages?.pages.flatMap((page) => page?.result?.query || []) || []
+  const totalComments =
+    commentPages?.pages[0]?.result?.pagination?.totalItems || 0
 
   return (
     <div className="mt-16 border-t pt-10">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="font-serif text-xl font-bold flex items-center gap-2">
+        <h3 className="flex items-center gap-2 font-serif text-xl font-bold">
           <MessageSquare className="h-5 w-5 text-primary" />
           Responses ({totalComments})
         </h3>
@@ -106,35 +109,42 @@ export default function Comment({ blogId }: { blogId: string }) {
 
       {/* Root Comment Form */}
       <div className="mb-10 flex gap-4 rounded-xl border bg-muted/10 p-4">
-        <Avatar className="h-9 w-9 border shrink-0">
-          <AvatarImage src={sessionUser?.image || ""} alt={sessionUser?.name || "avatar"} />
-          <AvatarFallback className="text-xs bg-muted">U</AvatarFallback>
+        <Avatar className="h-9 w-9 shrink-0 border">
+          <AvatarImage
+            src={sessionUser?.image || ""}
+            alt={sessionUser?.name || "avatar"}
+          />
+          <AvatarFallback className="bg-muted text-xs">U</AvatarFallback>
         </Avatar>
 
         <form onSubmit={handleRootSubmit} className="flex-1 space-y-3">
           <textarea
-            placeholder={sessionUser ? "What are your thoughts?" : "Sign in to join the conversation..."}
+            placeholder={
+              sessionUser
+                ? "What are your thoughts?"
+                : "Sign in to join the conversation..."
+            }
             value={rootContent}
             onChange={(e) => setRootContent(e.target.value)}
             onClick={handleAuthCheck}
             rows={3}
-            className="w-full resize-none border-0 bg-transparent text-sm p-0 placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+            className="w-full resize-none border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
             disabled={createMutation.isPending}
           />
           <div className="flex items-center justify-between border-t pt-2.5">
-            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
               {!sessionUser && <Lock className="h-3 w-3" />}
               {!sessionUser ? "Sign in required" : "Markdown not supported"}
             </span>
-            <Button 
-              type="submit" 
-              size="sm" 
+            <Button
+              type="submit"
+              size="sm"
               disabled={createMutation.isPending || !rootContent.trim()}
-              className="rounded-full text-xs font-semibold px-4"
+              className="rounded-full px-4 text-xs font-semibold"
             >
               {createMutation.isPending ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
+                  <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
                   Responding
                 </>
               ) : (
@@ -148,7 +158,7 @@ export default function Comment({ blogId }: { blogId: string }) {
       {/* Comments List */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center p-12 text-muted-foreground">
-          <Loader2 className="h-8 w-8 animate-spin mb-2" />
+          <Loader2 className="mb-2 h-8 w-8 animate-spin" />
           <p className="text-xs">Loading responses...</p>
         </div>
       ) : isError ? (
@@ -182,7 +192,7 @@ export default function Comment({ blogId }: { blogId: string }) {
                 size="sm"
                 onClick={() => fetchNextPage()}
                 disabled={isFetchingNextPage}
-                className="rounded-full text-xs flex items-center gap-1.5"
+                className="flex items-center gap-1.5 rounded-full text-xs"
               >
                 {isFetchingNextPage ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -224,7 +234,7 @@ function CommentItem({
   const [replySubmitting, setReplySubmitting] = useState(false)
 
   const isOwner = sessionUserId === comment.authorId
-  const canReply = depth < 3 
+  const canReply = depth < 3
 
   const handleReplySubmitLocal = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -255,7 +265,7 @@ function CommentItem({
     if (diffMins < 60) return `${diffMins}m ago`
     if (diffHrs < 24) return `${diffHrs}h ago`
     if (diffDays < 7) return `${diffDays}d ago`
-    
+
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -268,30 +278,35 @@ function CommentItem({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3 }}
-      className={`relative group ${depth > 0 ? "ml-6 pl-4 border-l mt-4" : ""}`}
+      className={`group relative ${depth > 0 ? "mt-4 ml-6 border-l pl-4" : ""}`}
     >
       <div className="flex gap-3">
-        <Avatar className="h-8 w-8 border shrink-0">
-          <AvatarImage src={comment.author?.image || ""} alt={comment.author?.name} />
-          <AvatarFallback className="text-xs bg-muted">U</AvatarFallback>
+        <Avatar className="h-8 w-8 shrink-0 border">
+          <AvatarImage
+            src={comment.author?.image || ""}
+            alt={comment.author?.name}
+          />
+          <AvatarFallback className="bg-muted text-xs">U</AvatarFallback>
         </Avatar>
 
         <div className="flex-1 space-y-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs">
-              <span className="font-semibold text-foreground">{comment.author?.name}</span>
+              <span className="font-semibold text-foreground">
+                {comment.author?.name}
+              </span>
               <span className="text-[10px] text-muted-foreground">
                 {formatRelativeTime(comment.createdAt)}
               </span>
             </div>
-            
+
             {isOwner && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => onDelete(comment.id)}
                 disabled={isDeleting}
-                className="h-7 w-7 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/5 shrink-0"
+                className="h-7 w-7 shrink-0 rounded-full text-muted-foreground hover:bg-destructive/5 hover:text-destructive"
                 aria-label="Delete comment"
               >
                 <Trash2 size={13} />
@@ -299,7 +314,7 @@ function CommentItem({
             )}
           </div>
 
-          <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+          <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
             {comment.content}
           </p>
 
@@ -307,7 +322,7 @@ function CommentItem({
             <div className="flex items-center gap-3 pt-1">
               <button
                 onClick={() => setIsReplying(!isReplying)}
-                className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground transition-colors duration-200 hover:text-foreground"
               >
                 <CornerDownRight size={12} />
                 Reply
@@ -324,22 +339,22 @@ function CommentItem({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             onSubmit={handleReplySubmitLocal}
-            className="ml-11 mt-3 flex items-start gap-3 rounded-lg border bg-muted/5 p-3"
+            className="mt-3 ml-11 flex items-start gap-3 rounded-lg border bg-muted/5 p-3"
           >
             <textarea
               placeholder="Write a reply..."
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
               rows={2}
-              className="w-full resize-none border-0 bg-transparent text-xs p-0 placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+              className="w-full resize-none border-0 bg-transparent p-0 text-xs placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
               disabled={replySubmitting}
             />
             <div className="flex shrink-0 flex-col gap-1.5 self-end">
-              <Button 
-                type="submit" 
-                size="sm" 
+              <Button
+                type="submit"
+                size="sm"
                 disabled={replySubmitting || !replyContent.trim()}
-                className="h-7 rounded-md text-[10px] px-3 font-semibold"
+                className="h-7 rounded-md px-3 text-[10px] font-semibold"
               >
                 {replySubmitting ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -347,12 +362,12 @@ function CommentItem({
                   "Reply"
                 )}
               </Button>
-              <Button 
-                type="button" 
+              <Button
+                type="button"
                 size="sm"
                 variant="ghost"
                 onClick={() => setIsReplying(false)}
-                className="h-7 rounded-md text-[10px] px-3 font-semibold"
+                className="h-7 rounded-md px-3 text-[10px] font-semibold"
               >
                 Cancel
               </Button>

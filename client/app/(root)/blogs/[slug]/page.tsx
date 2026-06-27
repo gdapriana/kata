@@ -4,18 +4,22 @@ import { use, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { 
-  Clock, 
-  Calendar, 
-  User, 
-  Heart, 
-  MessageCircle, 
-  Share2, 
-  Check, 
+import {
+  Clock,
+  Calendar,
+  User,
+  Heart,
+  MessageCircle,
+  Share2,
+  Check,
   Bookmark,
 } from "lucide-react"
 
-import { useBlog, useLikeBlog, useBookmarkBlog } from "@/hooks/queries/use-blogs"
+import {
+  useBlog,
+  useLikeBlog,
+  useBookmarkBlog,
+} from "@/hooks/queries/use-blogs"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -26,20 +30,24 @@ import Trending from "@/app/(root)/_components/trending"
 import RelatedPost from "@/app/(root)/blogs/[slug]/_components/related"
 import Comment from "@/app/(root)/blogs/[slug]/_components/comment"
 
-export default function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function BlogDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
   const { slug } = use(params)
   const router = useRouter()
   const { data: sessionData } = authClient.useSession()
   const sessionUser = sessionData?.user
-  const [loadingLike, setLoadingLike] = useState<boolean>(false);
-  const [loadingBookmark, setLoadingBookmark] = useState<boolean>(false);
+  const [loadingLike, setLoadingLike] = useState<boolean>(false)
+  const [loadingBookmark, setLoadingBookmark] = useState<boolean>(false)
 
   const { data, isLoading, isError, error, refetch } = useBlog("slug", slug)
   const blog = data?.result
 
   const likeMutation = useLikeBlog()
   const bookmarkMutation = useBookmarkBlog()
-  
+
   const [copied, setCopied] = useState(false)
 
   const handleShare = () => {
@@ -85,7 +93,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
   if (isLoading) {
     return (
       <main>
-        <div className="container aspect-video flex justify-center items-center">
+        <div className="container flex aspect-video items-center justify-center">
           <Spinner />
         </div>
       </main>
@@ -94,11 +102,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
 
   if (isError) {
     const is404 = error?.message?.toLowerCase().includes("not found")
-    
+
     return (
       <main className="flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-24">
         {is404 ? (
-          <StatusState 
+          <StatusState
             type="not-found"
             title="Blog Post Not Found"
             message={`We couldn't find a blog post with the address "${slug}". It may have been deleted or moved.`}
@@ -106,10 +114,13 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
             actionLabel="Back to Home"
           />
         ) : (
-          <StatusState 
+          <StatusState
             type="error"
             title="Failed to Load Blog"
-            message={error?.message || "An unexpected error occurred while fetching the story."}
+            message={
+              error?.message ||
+              "An unexpected error occurred while fetching the story."
+            }
             onRetry={refetch}
             actionHref="/"
             actionLabel="Back to Home"
@@ -122,7 +133,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
   if (!blog) {
     return (
       <main className="flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-24">
-        <StatusState 
+        <StatusState
           type="not-found"
           title="Blog Post Not Found"
           message={`The blog post you requested could not be found.`}
@@ -200,9 +211,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
                 disabled={loadingLike}
                 onClick={handleLikeToggle}
                 className={`flex items-center gap-1.5 rounded-full text-xs transition-colors duration-300 ${
-                  liked
-                    ? ""
-                    : "text-muted-foreground"
+                  liked ? "" : "text-muted-foreground"
                 }`}
               >
                 <Heart size={14} className={liked ? "fill-current" : ""} />
@@ -215,13 +224,14 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
                 onClick={handleBookmarkToggle}
                 disabled={loadingBookmark}
                 className={`flex items-center gap-1.5 rounded-full text-xs transition-colors duration-300 ${
-                  bookmarked
-                    ? ""
-                    : "text-muted-foreground"
+                  bookmarked ? "" : "text-muted-foreground"
                 }`}
                 aria-label="Bookmark story"
               >
-                <Bookmark size={14} className={bookmarked ? "fill-current" : ""} />
+                <Bookmark
+                  size={14}
+                  className={bookmarked ? "fill-current" : ""}
+                />
                 <span>{bookmarksCount}</span>
               </Button>
 
@@ -269,8 +279,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
                 </div>
               )}
 
-              <article className="space-y-6 text-justify leading-relaxed whitespace-pre-wrap text-sm text-foreground/70">
-                {blog.content}
+              <article dangerouslySetInnerHTML={{__html: blog.content}} className="space-y-6 prose text-justify text-sm leading-relaxed whitespace-pre-wrap text-foreground/70">
               </article>
 
               {blog.tags && blog.tags.length > 0 && (

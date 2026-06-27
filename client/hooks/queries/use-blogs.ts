@@ -4,6 +4,9 @@ import {
   getBlog,
   toggleLikeBlog,
   toggleBookmarkBlog,
+  getSavedBlogs,
+  getLikedBlogs,
+  createBlog,
   type GetBlogsParams,
 } from "../../lib/api/blog-api"
 import { blogKeys } from "./query-keys"
@@ -39,6 +42,33 @@ export function useBookmarkBlog() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: toggleBookmarkBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: blogKeys.all,
+      })
+    },
+  })
+}
+
+export function useSavedBlogs(params: GetBlogsParams = {}) {
+  return useQuery({
+    queryKey: blogKeys.savedList(params),
+    queryFn: () => getSavedBlogs(params),
+  })
+}
+
+export function useLikedBlogs(params: GetBlogsParams = {}) {
+  const queryClient = useQueryClient()
+  return useQuery({
+    queryKey: blogKeys.likedList(params),
+    queryFn: () => getLikedBlogs(params),
+  })
+}
+
+export function useCreateBlog() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: createBlog,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: blogKeys.all,

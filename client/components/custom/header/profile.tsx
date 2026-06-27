@@ -61,18 +61,20 @@ export default function Profile() {
           <AvatarImage src={sessionData.user.image || ""} />
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40 z-99">
+      <DropdownMenuContent className="z-99 w-40">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="justify-between">
-            Create Story
-            <Plus />
+          <DropdownMenuItem asChild className="justify-between">
+            <Link href="/create">
+              Create Story
+              <Plus />
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild className="cursor-pointer justify-between">
             <Link href="/profile">
-            Profile
-            <User />
+              Profile
+              <User />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer justify-between">

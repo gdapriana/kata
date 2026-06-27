@@ -2,10 +2,11 @@ import { Spinner } from "@/components/ui/spinner"
 import { useBlogs } from "@/hooks/queries/use-blogs"
 import BlogCard from "@/components/custom/card/blog"
 
-export default function RelatedPost({categoryId}: {categoryId: string}) {
-  const {data: blogs, isLoading} = useBlogs({
+export default function RelatedPost({ categoryId }: { categoryId: string }) {
+  const { data: blogs, isLoading } = useBlogs({
     limit: 2,
-    categoryId: categoryId
+    categoryId: categoryId,
+    status: "PUBLISHED"
   })
   return (
     <div className="flex flex-col items-stretch justify-start">

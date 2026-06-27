@@ -49,8 +49,14 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
   // Dynamic theme updates
   useEffect(() => {
     const isDark = resolvedTheme === "dark"
-    const { pointLight1, pointLight2, pointLight3, ambientLight } = lightsRef.current
-    const { centralMaterial, wireframeMaterial, particleMaterial, ringMaterial } = materialsRef.current
+    const { pointLight1, pointLight2, pointLight3, ambientLight } =
+      lightsRef.current
+    const {
+      centralMaterial,
+      wireframeMaterial,
+      particleMaterial,
+      ringMaterial,
+    } = materialsRef.current
 
     if (isDark) {
       // Dark mode: cool stark monochrome (polished black metal & white details)
@@ -270,7 +276,7 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
       const v = Math.random()
       const theta = u * 2.0 * Math.PI
       const phi = Math.acos(2.0 * v - 1.0)
-      
+
       const x = radius * Math.sin(phi) * Math.cos(theta)
       const y = radius * Math.sin(phi) * Math.sin(theta)
       const z = radius * Math.cos(phi)
@@ -292,28 +298,47 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
     }
 
     // Store materials in ref for theme changes
-    materialsRef.current = { centralMaterial, wireframeMaterial, particleMaterial, ringMaterial }
+    materialsRef.current = {
+      centralMaterial,
+      wireframeMaterial,
+      particleMaterial,
+      ringMaterial,
+    }
 
     // Run theme color setter once on initial render
     const isDark = resolvedTheme === "dark"
     if (isDark) {
-      pointLight1.color.setHex(0xffffff); pointLight1.intensity = 35
-      pointLight2.color.setHex(0xffffff); pointLight2.intensity = 30
-      pointLight3.color.setHex(0xffffff); pointLight3.intensity = 20
-      ambientLight.color.setHex(0xffffff); ambientLight.intensity = 0.25
-      centralMaterial.color.setHex(0x18181b); centralMaterial.emissive.setHex(0x000000)
-      wireframeMaterial.color.setHex(0xffffff); wireframeMaterial.opacity = 0.22
+      pointLight1.color.setHex(0xffffff)
+      pointLight1.intensity = 35
+      pointLight2.color.setHex(0xffffff)
+      pointLight2.intensity = 30
+      pointLight3.color.setHex(0xffffff)
+      pointLight3.intensity = 20
+      ambientLight.color.setHex(0xffffff)
+      ambientLight.intensity = 0.25
+      centralMaterial.color.setHex(0x18181b)
+      centralMaterial.emissive.setHex(0x000000)
+      wireframeMaterial.color.setHex(0xffffff)
+      wireframeMaterial.opacity = 0.22
       particleMaterial.color.setHex(0xffffff)
-      ringMaterial.color.setHex(0xffffff); ringMaterial.opacity = 0.12
+      ringMaterial.color.setHex(0xffffff)
+      ringMaterial.opacity = 0.12
     } else {
-      pointLight1.color.setHex(0xffffff); pointLight1.intensity = 20
-      pointLight2.color.setHex(0xffffff); pointLight2.intensity = 15
-      pointLight3.color.setHex(0xffffff); pointLight3.intensity = 10
-      ambientLight.color.setHex(0xffffff); ambientLight.intensity = 0.55
-      centralMaterial.color.setHex(0xffffff); centralMaterial.emissive.setHex(0x000000)
-      wireframeMaterial.color.setHex(0x000000); wireframeMaterial.opacity = 0.12
+      pointLight1.color.setHex(0xffffff)
+      pointLight1.intensity = 20
+      pointLight2.color.setHex(0xffffff)
+      pointLight2.intensity = 15
+      pointLight3.color.setHex(0xffffff)
+      pointLight3.intensity = 10
+      ambientLight.color.setHex(0xffffff)
+      ambientLight.intensity = 0.55
+      centralMaterial.color.setHex(0xffffff)
+      centralMaterial.emissive.setHex(0x000000)
+      wireframeMaterial.color.setHex(0x000000)
+      wireframeMaterial.opacity = 0.12
       particleMaterial.color.setHex(0x27272a)
-      ringMaterial.color.setHex(0x000000); ringMaterial.opacity = 0.08
+      ringMaterial.color.setHex(0x000000)
+      ringMaterial.opacity = 0.08
     }
 
     // 6. Mouse movement parallax tracking
@@ -352,7 +377,7 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
         const wave1 = Math.sin(x * 1.5 + time * 1.5)
         const wave2 = Math.cos(y * 1.5 - time * 2.0)
         const wave3 = Math.sin(z * 1.5 + time * 1.8)
-        
+
         // Final displacement distance
         const displacement = (wave1 + wave2 + wave3) * 0.12
 
@@ -367,7 +392,7 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
       // B. Slow rotations for main objects
       centralMesh.rotation.y = time * 0.1
       centralMesh.rotation.x = time * 0.05
-      
+
       wireframeMesh.rotation.y = -time * 0.08
       wireframeMesh.rotation.x = -time * 0.04
 
@@ -376,10 +401,13 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
 
       // C. Orbiting particles movement
       particles.forEach((p) => {
-        p.mesh.position.x = p.initialPos.x + Math.sin(time * p.speedX + p.phase) * p.amplitudeX
-        p.mesh.position.y = p.initialPos.y + Math.cos(time * p.speedY + p.phase) * p.amplitudeY
-        p.mesh.position.z = p.initialPos.z + Math.sin(time * p.speedZ + p.phase) * p.amplitudeZ
-        
+        p.mesh.position.x =
+          p.initialPos.x + Math.sin(time * p.speedX + p.phase) * p.amplitudeX
+        p.mesh.position.y =
+          p.initialPos.y + Math.cos(time * p.speedY + p.phase) * p.amplitudeY
+        p.mesh.position.z =
+          p.initialPos.z + Math.sin(time * p.speedZ + p.phase) * p.amplitudeZ
+
         p.mesh.rotation.x += 0.01
         p.mesh.rotation.y += 0.015
       })
@@ -439,8 +467,14 @@ export default function HeroCanvas({ scale = 1.0 }: HeroCanvasProps) {
   }, []) // Empty dependency array means this runs once on mount
 
   return (
-    <div ref={containerRef} className="relative flex h-[350px] w-full items-center justify-center md:h-[450px]">
-      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full outline-none" />
+    <div
+      ref={containerRef}
+      className="relative flex h-[350px] w-full items-center justify-center md:h-[450px]"
+    >
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 block h-full w-full outline-none"
+      />
       {/* Visual background ambient glow that matches the monochrome theme */}
       <div className="absolute top-1/2 left-1/2 -z-10 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-500/5 blur-[100px] dark:bg-neutral-500/10" />
     </div>

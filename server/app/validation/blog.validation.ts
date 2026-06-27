@@ -50,7 +50,7 @@ export class BlogValidation {
     categoryId: z.string(),
     featuredImageId: z.string().optional(),
     galleryImageIds: z.array(z.string()).optional(),
-    tagIds: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
     publishedAt: z.coerce.date().optional(),
   });
 

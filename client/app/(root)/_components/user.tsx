@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useUsers } from "@/hooks/queries/use-users"
 import { Spinner } from "@/components/ui/spinner"
 import Link from "next/link"
@@ -16,13 +16,13 @@ export default function TopUsers() {
   return (
     <main className="p-6">
       <div className="container">
-        <div className="relative overflow-hidden border-t py-20 bg-background">
-          <div className="absolute top-0 bottom-0 left-0 w-20 md:w-40 bg-linear-to-r from-background via-background/70 to-transparent pointer-events-none z-10" />
-          <div className="absolute top-0 bottom-0 right-0 w-20 md:w-40 bg-linear-to-l from-background via-background/70 to-transparent pointer-events-none z-10" />
+        <div className="relative overflow-hidden border-t bg-background py-20">
+          <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-20 bg-linear-to-r from-background via-background/70 to-transparent md:w-40" />
+          <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-20 bg-linear-to-l from-background via-background/70 to-transparent md:w-40" />
 
-          <header className="flex items-center justify-center mb-10">
-            <h2 className="font-serif text-center text-xl font-bold">
-              Top Creator <br/> of the Month
+          <header className="mb-10 flex items-center justify-center">
+            <h2 className="text-center font-serif text-xl font-bold">
+              Top Creator <br /> of the Month
             </h2>
           </header>
 
@@ -33,9 +33,9 @@ export default function TopUsers() {
           )}
 
           {!isLoading && users && users.result?.query && (
-            <div className="flex overflow-hidden w-full">
+            <div className="flex w-full overflow-hidden">
               <motion.div
-                className="flex gap-8 shrink-0"
+                className="flex shrink-0 gap-8"
                 animate={{ x: ["-50%", "0%"] }}
                 transition={{
                   ease: "linear",
@@ -44,27 +44,33 @@ export default function TopUsers() {
                 }}
                 style={{ width: "max-content" }}
               >
-                {[...users.result.query, ...users.result.query].map((user: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col gap-2 justify-start items-center w-28 shrink-0 select-none"
-                  >
-                    <Avatar className="w-20 h-20 border border-primary/10">
-                      <AvatarFallback>
-                        <User />
-                      </AvatarFallback>
-                      <AvatarImage src={user?.image || ""} className="object-cover grayscale" />
-                    </Avatar>
-                    <div className="text-center">
-                      <h4 className="font-serif font-bold text-sm truncate max-w-27.5">
-                        {user.name}
-                      </h4>
-                      <span className="text-[11px] text-muted-foreground block font-medium mt-0.5">
-                        {user?._count.blogs} {user?._count.blogs === 1 ? "Post" : "Posts"}
-                      </span>
+                {[...users.result.query, ...users.result.query].map(
+                  (user: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="flex w-28 shrink-0 flex-col items-center justify-start gap-2 select-none"
+                    >
+                      <Avatar className="h-20 w-20 border border-primary/10">
+                        <AvatarFallback>
+                          <User />
+                        </AvatarFallback>
+                        <AvatarImage
+                          src={user?.image || ""}
+                          className="object-cover grayscale"
+                        />
+                      </Avatar>
+                      <div className="text-center">
+                        <h4 className="max-w-27.5 truncate font-serif text-sm font-bold">
+                          {user.name}
+                        </h4>
+                        <span className="mt-0.5 block text-[11px] font-medium text-muted-foreground">
+                          {user?._count.blogs}{" "}
+                          {user?._count.blogs === 1 ? "Post" : "Posts"}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </motion.div>
             </div>
           )}

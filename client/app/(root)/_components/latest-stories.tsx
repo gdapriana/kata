@@ -7,12 +7,10 @@ import BlogCard from "@/components/custom/card/blog"
 import TopCategories from "@/app/(root)/_components/category"
 
 export default function LatestStories() {
-  const {
-    data: blogs,
-    isLoading,
-  } = useBlogs({
+  const { data: blogs, isLoading } = useBlogs({
     sortBy: "createdAt",
     limit: 6,
+    status: "PUBLISHED",
   })
 
   return (
@@ -29,7 +27,7 @@ export default function LatestStories() {
             </div>
           )}
 
-          <div className="grid gap-6 grid-cols-1 py-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 py-6 md:grid-cols-2">
             {!isLoading &&
               blogs &&
               blogs?.result?.query?.map((blog: any, idx: number) => (

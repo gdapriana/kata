@@ -8,6 +8,7 @@ import blogRoute from "./routes/blog.route.js";
 import categoryRoute from "./routes/category.route.js";
 import userRoute from "./routes/user.route.js";
 import commentRoute from "./routes/comment.route.js";
+import imageRoute from "./routes/image.route.js";
 
 export const app = express();
 
@@ -36,4 +37,5 @@ app.use("/api/blogs", blogRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/users", userRoute);
 app.use("/api/comments", commentRoute);
+app.use("/api/images", imageRoute);
 app.use(errorMiddleware);

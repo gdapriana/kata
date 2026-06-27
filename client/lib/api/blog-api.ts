@@ -89,3 +89,81 @@ export async function toggleBookmarkBlog(blogId: string) {
   }
   return res.json()
 }
+
+export async function getSavedBlogs(params: GetBlogsParams = {}) {
+  const queryParams = new URLSearchParams()
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      if (Array.isArray(value)) {
+        value.forEach((val) => queryParams.append(key, val))
+      } else {
+        queryParams.append(key, String(value))
+      }
+    }
+  })
+
+  const url = `${SERVER_URL}/api/blogs/saved?${queryParams.toString()}`
+  const res = await fetch(url, {
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to fetch saved blogs")
+  }
+  return res.json()
+}
+
+export async function getLikedBlogs(params: GetBlogsParams = {}) {
+  const queryParams = new URLSearchParams()
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      if (Array.isArray(value)) {
+        value.forEach((val) => queryParams.append(key, val))
+      } else {
+        queryParams.append(key, String(value))
+      }
+    }
+  })
+
+  const url = `${SERVER_URL}/api/blogs/liked?${queryParams.toString()}`
+  const res = await fetch(url, {
+    credentials: "include",
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to fetch liked blogs")
+  }
+  return res.json()
+}
+
+export interface CreateBlogData {
+  title: string
+  slug: string
+  content: string
+  excerpt?: string
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED"
+  categoryId: string
+  featuredImageId?: string
+  galleryImageIds?: string[]
+  tags?: string[]
+}
+
+export async function createBlog(data: CreateBlogData) {
+  const url = `${SERVER_URL}/api/blogs/create`
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to create post")
+  }
+  return res.json()
+}

@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Loader2, LogOut, User, Mail, Shield } from "lucide-react"
+import { Loader2, LogOut, User, Mail, Shield, Plus } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Saved from "@/app/(root)/profile/_components/saved"
+import Liked from "@/app/(root)/profile/_components/liked"
+import YourPost from "@/app/(root)/profile/_components/your-post"
 
 export default function Page() {
   const router = useRouter()
@@ -57,100 +54,55 @@ export default function Page() {
   }
 
   if (!sessionData) {
-    return null // Will redirect in useEffect
+    return null
   }
 
   const user = sessionData.user
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background p-4 sm:p-6 md:p-8">
-      <div className="relative w-full max-w-md">
-        {/* Decorative background glow */}
-        <div className="absolute -top-12 -left-12 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -right-12 -bottom-12 -z-10 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
-
-        <Card className="border border-border/80 bg-card/60 shadow-2xl backdrop-blur-md">
-          <CardHeader className="space-y-1.5 pb-6 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-              {user.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.image}
-                  alt={user.name || "User avatar"}
-                  className="h-full w-full rounded-full object-cover"
-                />
-              ) : (
-                <User className="h-8 w-8" />
-              )}
-            </div>
-            <CardTitle className="mt-4 font-heading text-3xl font-semibold tracking-tight text-foreground">
-              User Profile
-            </CardTitle>
-            <CardDescription className="text-muted-foreground/90">
-              Welcome back to your workspace
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            <div className="space-y-3.5 rounded-lg border border-border/60 bg-background/40 p-4">
-              <div className="flex items-center gap-3">
-                <User className="h-4.5 w-4.5 text-muted-foreground/75" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                    Full Name
-                  </p>
-                  <p className="truncate text-sm font-semibold text-foreground">
-                    {user.name || "N/A"}
-                  </p>
-                </div>
+    <main className="p-6 pt-36">
+      <div className="container">
+        <div className="flex flex-col items-stretch justify-start gap-8">
+          <div className="flex items-center justify-start gap-8">
+            <Avatar className="h-20 w-20">
+              <AvatarFallback>
+                <User />
+              </AvatarFallback>
+              <AvatarImage src={user.image || ""} />
+            </Avatar>
+            <div className="flex flex-col items-start justify-start gap-1">
+              <span className="text-sm text-muted-foreground">
+                {user.email}
+              </span>
+              <h1 className="font-serif text-lg font-bold">{user.name}</h1>
+              <div className="mt-4 flex items-center justify-start gap-2">
+                <Button size="sm">
+                  New Story <Plus />
+                </Button>
+                <Button size="sm" variant="outline">
+                  Setting <User />
+                </Button>
               </div>
-
-              <div className="flex items-center gap-3 border-t border-border/40 pt-3">
-                <Mail className="h-4.5 w-4.5 text-muted-foreground/75" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                    Email Address
-                  </p>
-                  <p className="truncate text-sm font-semibold text-foreground">
-                    {user.email || "N/A"}
-                  </p>
-                </div>
-              </div>
-
-              {(user as any).role && (
-                <div className="flex items-center gap-3 border-t border-border/40 pt-3">
-                  <Shield className="h-4.5 w-4.5 text-muted-foreground/75" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                      Role
-                    </p>
-                    <p className="truncate text-sm font-semibold text-foreground capitalize">
-                      {(user as any).role}
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
-          </CardContent>
+          </div>
 
-          <CardFooter className="pt-2 pb-6">
-            <Button
-              variant="destructive"
-              disabled={loggingOut}
-              onClick={handleSignOut}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 shadow-lg transition-all duration-200 hover:shadow-destructive/10"
-            >
-              {loggingOut ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
+          <Tabs defaultValue="post">
+            <TabsList variant="line">
+              <TabsTrigger value="post">Your post</TabsTrigger>
+              <TabsTrigger value="saved">Saved</TabsTrigger>
+              <TabsTrigger value="liked">Liked</TabsTrigger>
+            </TabsList>
+            <TabsContent value="post">
+              <YourPost authorId={sessionData.user.id} />
+            </TabsContent>
+            <TabsContent value="saved">
+              <Saved />
+            </TabsContent>
+            <TabsContent value="liked">
+              <Liked />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </main>
   )

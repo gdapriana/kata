@@ -7,6 +7,7 @@ import Link from "next/link"
 export default function Trending() {
   const { data: blogs, isLoading } = useBlogs({
     limit: 5,
+    status: "PUBLISHED",
   })
   return (
     <div className="flex flex-col items-stretch justify-start">

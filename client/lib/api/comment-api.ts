@@ -17,7 +17,7 @@ export async function getComments(params: GetCommentsParams) {
 
   const url = `${SERVER_URL}/api/comments/query?${queryParams.toString()}`
   const res = await fetch(url, {
-    credentials: "include"
+    credentials: "include",
   })
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
