@@ -5,33 +5,80 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
-import { Calendar, Loader2, User, Upload, X } from "lucide-react"
+import { Calendar, Loader2, User, Upload, X, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, use } from "react"
 import TiptapEditor from "@/components/custom/editor/tiptap-editor"
 import { useUploadSingleImage } from "@/hooks/queries/use-images"
 import { useCategories } from "@/hooks/queries/use-categories"
-import { useCreateBlog } from "@/hooks/queries/use-blogs"
+import { useBlog, useUpdateBlog } from "@/hooks/queries/use-blogs"
+import Link from "next/link"
 
-export default function Page() {
+export default function EditBlogPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug: paramsSlug } = use(params)
   const router = useRouter()
-  const { data: sessionData, isPending } = authClient.useSession()
+  const { data: sessionData, isPending: isSessionPending } = authClient.useSession()
 
-  // Form States
+  // Fetch blog data
+  const { data: blogData, isLoading: isBlogLoading, isError: isBlogError } = useBlog("slug", paramsSlug)
+  const blog = blogData?.result
+
   const [title, setTitle] = useState("")
   const [slug, setSlug] = useState("")
   const [isSlugCustom, setIsSlugCustom] = useState(false)
-  const [content, setContent] = useState("<p>Write something beautiful...</p>")
+  const [content, setContent] = useState("")
   const [excerpt, setExcerpt] = useState("")
   const [categoryId, setCategoryId] = useState("")
-  const [categorySearch, setCategorySearch] = useState("")
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
   const [tagInput, setTagInput] = useState("")
   const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT")
   const [featuredImageId, setFeaturedImageId] = useState<string | null>(null)
   const [featuredImageUrl, setFeaturedImageUrl] = useState<string | null>(null)
 
+  const [categorySearch, setCategorySearch] = useState("")
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
   const categorySelectRef = useRef<HTMLDivElement>(null)
+
+  const uploadImageMutation = useUploadSingleImage()
+  const updateBlogMutation = useUpdateBlog()
+  const { data: categoriesData } = useCategories({ limit: 100 })
+  const categories = categoriesData?.result?.query || []
+
+  const selectedCategory = categories.find((c: any) => c.id === categoryId) || (blog && blog.category && blog.category.id === categoryId ? blog.category : null)
+  const filteredCategories = categories
+    .filter((c: any) => c.name.toLowerCase().includes(categorySearch.toLowerCase()))
+    .slice(0, 5)
+
+  useEffect(() => {
+    if (!isSessionPending && !sessionData) {
+      router.push("/sign-in")
+    }
+  }, [isSessionPending, sessionData, router])
+
+  const hasInitializedRef = useRef(false)
+
+  useEffect(() => {
+    if (blog && !hasInitializedRef.current) {
+      setTitle(blog.title)
+      setSlug(blog.slug)
+      setIsSlugCustom(true)
+      setContent(blog.content)
+      setExcerpt(blog.excerpt || "")
+      setCategoryId(blog.categoryId)
+      setStatus(blog.status === "PUBLISHED" ? "PUBLISHED" : "DRAFT")
+      if (blog.featuredImage && !hasInitializedRef.current) {
+        setFeaturedImageId(blog.featuredImage.id)
+        setFeaturedImageUrl(blog.featuredImage.url)
+      }
+      if (blog.tags && blog.tags.length > 0 && hasInitializedRef.current) {
+        setTagInput(blog.tags.map((t: any) => t.name).join(", "))
+      }
+      hasInitializedRef.current = true
+    }
+  }, [blog])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -45,28 +92,12 @@ export default function Page() {
     }
   }, [])
 
-  const uploadImageMutation = useUploadSingleImage()
-  const createBlogMutation = useCreateBlog()
-  const { data: categoriesData } = useCategories({ limit: 100 })
-  const categories = categoriesData?.result?.query || []
-
-  const selectedCategory = categories.find((c: any) => c.id === categoryId)
-  const filteredCategories = categories
-    .filter((c: any) => c.name.toLowerCase().includes(categorySearch.toLowerCase()))
-    .slice(0, 5)
-
-  useEffect(() => {
-    if (!isPending && !sessionData) {
-      router.push("/sign-up")
-    }
-  }, [isPending, sessionData, router])
-
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
       .trim()
-      .replace(/[^\w\s-]/g, "") 
-      .replace(/[\s_]+/g, "-") 
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_]+/g, "-")
       .replace(/-+/g, "-")
       .replace(/^-+/, "")
       .replace(/-+$/, "")
@@ -80,7 +111,6 @@ export default function Page() {
     }
   }
 
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -93,8 +123,10 @@ export default function Page() {
     }
   }
 
-  const handleCreateBlog = (e: React.FormEvent) => {
+  const handleUpdateBlog = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!blog) return
 
     if (!title) {
       alert("Title is required.")
@@ -111,55 +143,94 @@ export default function Page() {
 
     const tags = tagInput.split(",").map(t => t.trim()).filter(Boolean)
 
-    createBlogMutation.mutate(
+    updateBlogMutation.mutate(
       {
-        title,
-        slug,
-        content,
-        excerpt: excerpt || undefined,
-        status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
-        categoryId,
-        featuredImageId: featuredImageId || undefined,
-        tags: tags.length > 0 ? tags : undefined,
+        id: blog.id,
+        data: {
+          title,
+          slug,
+          content,
+          excerpt: excerpt || undefined,
+          status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
+          categoryId,
+          featuredImageId: featuredImageId || undefined,
+          tags: tags.length > 0 ? tags : undefined,
+        },
       },
       {
         onSuccess: (data) => {
           router.push(`/blogs/${data.result.slug}`)
         },
         onError: (err: any) => {
-          alert(err.message || "Failed to create blog post. Check your slug and try again.")
+          alert(err.message || "Failed to update blog post.")
         },
       }
     )
   }
 
-  if (isPending) {
+  const isAuthor = blog && sessionData && sessionData.user.id === blog.authorId
+
+  if (isSessionPending || isBlogLoading) {
     return (
       <main className="flex min-h-svh items-center justify-center bg-background p-4">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
-            Loading your credentials...
-          </p>
+          <p className="text-sm text-muted-foreground">Loading story details...</p>
         </div>
       </main>
     )
   }
-  if (!sessionData) {
-    return null
+
+  if (isBlogError || !blog) {
+    return (
+      <main className="flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-24">
+        <div className="text-center">
+          <h2 className="text-2xl font-serif font-bold mb-2">Failed to Load Post</h2>
+          <p className="text-sm text-muted-foreground mb-4">We couldnt load the post to edit.</p>
+          <Button asChild>
+            <Link href="/">Back to Home</Link>
+          </Button>
+        </div>
+      </main>
+    )
+  }
+
+  if (sessionData && !isAuthor) {
+    return (
+      <main className="flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-24">
+        <div className="text-center">
+          <h2 className="text-2xl font-serif font-bold mb-2">Access Denied</h2>
+          <p className="text-sm text-muted-foreground mb-4">Only the original author can edit this post.</p>
+          <Button asChild>
+            <Link href={`/blogs/${blog.slug}`}>Back to Story</Link>
+          </Button>
+        </div>
+      </main>
+    )
   }
 
   return (
     <main className="p-6 pt-32">
       <div className="container">
         <form
-          onSubmit={handleCreateBlog}
+          onSubmit={handleUpdateBlog}
           className="grid grid-cols-1 gap-8 md:grid-cols-[68%_32%]"
         >
-          {/* Header Section */}
           <header className="md:col-span-2 flex flex-col gap-6">
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push(`/blogs/${blog.slug}`)}
+                className="text-xs flex items-center gap-1 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft size={14} /> Back to Story
+              </Button>
+            </div>
+
             <div className="flex flex-col items-start justify-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Create New Post</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Editing Article</span>
               <input
                 autoFocus
                 type="text"
@@ -169,12 +240,12 @@ export default function Page() {
                 placeholder="Your post title here"
               />
             </div>
-            
+
             <div className="flex items-center gap-3 border-y py-4">
               <Avatar className="h-10 w-10 border">
                 <AvatarImage
-                  src={sessionData.user.image || ""}
-                  alt={sessionData.user.name}
+                  src={blog.author?.image || ""}
+                  alt={blog.author?.name}
                 />
                 <AvatarFallback>
                   <User size={16} />
@@ -182,12 +253,12 @@ export default function Page() {
               </Avatar>
               <div className="flex flex-col text-xs">
                 <span className="font-semibold text-foreground">
-                  {sessionData.user.name}
+                  {blog.author?.name}
                 </span>
                 <div className="mt-0.5 flex items-center gap-2 text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Calendar size={12} />
-                    {new Date().toLocaleDateString("en-US", {
+                    {new Date(blog.publishedAt || blog.createdAt).toLocaleDateString("en-US", {
                       month: "long",
                       day: "numeric",
                       year: "numeric",
@@ -198,14 +269,12 @@ export default function Page() {
             </div>
           </header>
 
-          {/* Main Column */}
           <section className="flex flex-col gap-8">
-            {/* Image Upload Area */}
             <div className="flex flex-col gap-2">
               <span className="text-sm font-semibold text-muted-foreground">Featured Cover Image</span>
               
               {featuredImageUrl ? (
-                <div className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border shadow-xs group">
+                <div className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border shadow-xs group animate-in fade-in duration-300">
                   <img src={featuredImageUrl} alt="Cover image preview" className="w-full h-full object-cover" />
                   <Button
                     type="button"
@@ -260,7 +329,7 @@ export default function Page() {
                 type="button"
                 id="category"
                 onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                className="w-full rounded-md border border-input bg-background p-2 text-sm text-left shadow-xs flex items-center justify-between hover:bg-muted/10 transition-colors"
+                className="w-full rounded-md border border-input bg-background p-2.5 text-sm text-left shadow-xs flex items-center justify-between hover:bg-muted/10 transition-colors"
               >
                 <span className={selectedCategory ? "text-foreground font-medium" : "text-muted-foreground"}>
                   {selectedCategory ? selectedCategory.name : "Select a category..."}
@@ -304,6 +373,7 @@ export default function Page() {
               )}
             </div>
 
+            {/* Excerpt */}
             <div className="flex flex-col gap-2">
               <Label htmlFor="excerpt" className="text-sm font-medium">Excerpt (Summary)</Label>
               <textarea
@@ -316,6 +386,7 @@ export default function Page() {
               />
             </div>
 
+            {/* Tags Input */}
             <div className="flex flex-col gap-2">
               <Label htmlFor="tags" className="text-sm font-medium">Tags (comma separated)</Label>
               <Input
@@ -347,19 +418,19 @@ export default function Page() {
               <Button
                 type="submit"
                 className="w-full py-5 text-sm font-semibold tracking-wide"
-                disabled={createBlogMutation.isPending || uploadImageMutation.isPending}
+                disabled={updateBlogMutation.isPending || uploadImageMutation.isPending}
               >
-                {createBlogMutation.isPending && (
+                {updateBlogMutation.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {status === "PUBLISHED" ? "Publish Article" : "Save Draft"}
+                Save Changes
               </Button>
               <Button
                 type="button"
                 variant="outline"
                 className="w-full text-xs"
-                onClick={() => router.push("/")}
-                disabled={createBlogMutation.isPending}
+                onClick={() => router.push(`/blogs/${blog.slug}`)}
+                disabled={updateBlogMutation.isPending}
               >
                 Cancel
               </Button>

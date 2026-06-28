@@ -13,6 +13,7 @@ import {
   Share2,
   Check,
   Bookmark,
+  Edit,
 } from "lucide-react"
 
 import {
@@ -150,6 +151,7 @@ export default function BlogDetailPage({
   const likesCount = blog.likedCount || 0
   const bookmarksCount = blog.favoriteCount || 0
 
+
   return (
     <main className="px-6 pt-32 pb-24">
       <div className="container">
@@ -262,6 +264,20 @@ export default function BlogDetailPage({
                   </span>
                 )}
               </Button>
+
+              {sessionData && sessionData.user.id === blog.authorId && (
+                <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="relative h-8 w-8 rounded-full text-muted-foreground"
+                  aria-label="Edit"
+                >
+                  <Link href={`/blogs/${blog.slug}/edit`}>
+                  <Edit />
+                  </Link>
+                  </Button>
+              )}
             </div>
           </div>
 
@@ -279,8 +295,15 @@ export default function BlogDetailPage({
                 </div>
               )}
 
-              <article dangerouslySetInnerHTML={{__html: blog.content}} className="space-y-6 prose text-justify text-sm leading-relaxed whitespace-pre-wrap text-foreground/70">
-              </article>
+              {blog.excerpt && (
+                <div className="border-b py-4 mb-4">
+                  <p className="text-sm">
+                  {blog.excerpt}
+                  </p>
+                </div>
+              )}
+
+              <article dangerouslySetInnerHTML={{__html: blog.content}} className="space-y-6 prose dark:prose-invert text-justify text-sm leading-relaxed whitespace-pre-wrap text-foreground/70"></article>
 
               {blog.tags && blog.tags.length > 0 && (
                 <div className="mt-12 flex flex-wrap gap-2 border-t pt-10">

@@ -2,6 +2,7 @@ import type {
   BlogValidationGetOne,
   BlogValidationGetAll,
   BlogValidationCreate,
+  BlogValidationUpdate,
 } from "../validation/blog.validation.js"
 import type {
   BlogGetOneResponseType,
@@ -273,5 +274,91 @@ export class BlogService {
     })
 
     return { id }
+  }
+
+  static Update = async (
+    id: string,
+    data: BlogValidationUpdate,
+    userId: string,
+    userRole: string
+  ) => {
+    const blog = await prismaClient.blog.findUnique({
+      where: { id },
+      select: { id: true, authorId: true, content: true, publishedAt: true },
+    })
+
+    if (!blog) {
+      throw new ResponseError(ErrorResponseMessage.NOT_FOUND("blog" as any))
+    }
+
+    if (blog.authorId !== userId && userRole !== "ADMIN") {
+      throw new ResponseError(ErrorResponseMessage.FORBIDDEN())
+    }
+
+    if (data.categoryId) {
+      const category = await prismaClient.category.findUnique({
+        where: { id: data.categoryId },
+        select: { id: true },
+      })
+      if (!category) {
+        throw new ResponseError(ErrorResponseMessage.NOT_FOUND("category" as any))
+      }
+    }
+
+    if (data.slug) {
+      const existingSlugBlog = await prismaClient.blog.findUnique({
+        where: { slug: data.slug },
+        select: { id: true },
+      })
+      if (existingSlugBlog && existingSlugBlog.id !== id) {
+        throw new ResponseError(ErrorResponseMessage.ALREADY_EXISTS("blog" as any))
+      }
+    }
+
+    let readTime = undefined
+    if (data.content !== undefined) {
+      const wordCount = data.content.trim().split(/\s+/).length
+      readTime = Math.max(1, Math.ceil(wordCount / 200))
+    }
+
+    const updatedBlog = await prismaClient.blog.update({
+      where: { id },
+      data: {
+        title: data.title,
+        slug: data.slug,
+        content: data.content,
+        excerpt: data.excerpt,
+        status: data.status,
+        readTime,
+        categoryId: data.categoryId,
+        featuredImageId: data.featuredImageId,
+        publishedAt: data.status === "PUBLISHED" 
+          ? (blog.publishedAt || data.publishedAt || new Date()) 
+          : (data.status === "DRAFT" ? null : undefined),
+        tags: data.tags ? {
+          set: [],
+          connectOrCreate: data.tags.map(tagName => {
+            const cleanTagSlug = tagName
+              .toLowerCase()
+              .trim()
+              .replace(/[^\w\s-]/g, "")
+              .replace(/[\s_]+/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-+/, "")
+              .replace(/-+$/, "")
+            return {
+              where: { slug: cleanTagSlug },
+              create: { name: tagName.trim(), slug: cleanTagSlug }
+            }
+          })
+        } : undefined,
+        galleryImages: data.galleryImageIds ? {
+          set: [],
+          connect: data.galleryImageIds.map(imgId => ({ id: imgId })),
+        } : undefined,
+      },
+    })
+
+    return updatedBlog
   }
 }

@@ -1,7 +1,9 @@
 import type {
   UserValidationGetOne,
   UserValidationGetAll,
+  UserValidationUpdate,
 } from "../validation/user.validation.js";
+import { prismaClient } from "../database/db.js";
 import type {
   UserGetOneResponseType,
   UserGetAllResponseType,
@@ -22,4 +24,18 @@ export class UserService {
   ): Promise<{ query: UserGetAllResponseType[]; pagination: Pagination }> => {
     return userGetAll(data);
   };
+
+  static Update = async (
+    id: string,
+    data: UserValidationUpdate
+  ) => {
+    const user = await prismaClient.user.update({
+      where: { id },
+      data: {
+        name: data.name,
+        image: data.image,
+      },
+    })
+    return user
+  }
 }

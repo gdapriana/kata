@@ -29,7 +29,7 @@ import {
   Redo,
   Terminal,
 } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 interface TiptapEditorProps {
   content: string
@@ -42,6 +42,8 @@ export default function TiptapEditor({
   onChange,
   placeholder = "Write something beautiful...",
 }: TiptapEditorProps) {
+  const isProgrammaticRef = useRef(false)
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -65,7 +67,9 @@ export default function TiptapEditor({
     ],
     content: content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML())
+      if (!isProgrammaticRef.current) {
+        onChange(editor.getHTML())
+      }
     },
     editorProps: {
       attributes: {
@@ -77,7 +81,9 @@ export default function TiptapEditor({
   // Keep content in sync if updated externally (like when loading initial database values)
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
+      isProgrammaticRef.current = true
       editor.commands.setContent(content)
+      isProgrammaticRef.current = false
     }
   }, [content, editor])
 

@@ -6,6 +6,7 @@ import { Loader2, LogOut, User, Mail, Shield, Plus } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Saved from "@/app/(root)/profile/_components/saved"
 import Liked from "@/app/(root)/profile/_components/liked"
@@ -76,11 +77,15 @@ export default function Page() {
               </span>
               <h1 className="font-serif text-lg font-bold">{user.name}</h1>
               <div className="mt-4 flex items-center justify-start gap-2">
-                <Button size="sm">
-                  New Story <Plus />
+                <Button size="sm" asChild>
+                  <Link href="/create">
+                    New Story <Plus />
+                  </Link>
                 </Button>
-                <Button size="sm" variant="outline">
-                  Setting <User />
+                <Button size="sm" variant="outline" asChild>
+                  <Link href="/profile/edit">
+                    Setting <User />
+                  </Link>
                 </Button>
               </div>
             </div>

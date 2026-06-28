@@ -18,7 +18,13 @@ export class UserValidation {
       .default("createdAt"),
     sortOrder: z.enum(["asc", "desc"]).default("desc"),
   });
+
+  static Update = z.object({
+    name: z.string().trim().min(1).max(100).optional(),
+    image: z.string().url().or(z.literal("")).optional().nullable(),
+  }).strict();
 }
 
 export type UserValidationGetOne = z.infer<typeof UserValidation.GetOne>;
 export type UserValidationGetAll = z.infer<typeof UserValidation.GetAll>;
+export type UserValidationUpdate = z.infer<typeof UserValidation.Update>;

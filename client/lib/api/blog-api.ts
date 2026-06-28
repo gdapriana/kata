@@ -167,3 +167,23 @@ export async function createBlog(data: CreateBlogData) {
   }
   return res.json()
 }
+
+export type UpdateBlogData = Partial<CreateBlogData>
+
+export async function updateBlog({ id, data }: { id: string; data: UpdateBlogData }) {
+  const url = `${SERVER_URL}/api/blogs/${id}`
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to update post")
+  }
+  return res.json()
+}

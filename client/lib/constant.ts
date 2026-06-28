@@ -12,15 +12,11 @@ export const NAV: NavType[] = [
     url: "/",
   },
   {
-    name: "Library",
-    url: "/library",
-  },
-  {
     name: "Stories",
     url: "/stories",
   },
   {
-    name: "Stats",
-    url: "/stats",
+    name: "Activity",
+    url: "/activity",
   },
 ]

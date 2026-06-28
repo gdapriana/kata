@@ -7,6 +7,7 @@ import {
   getSavedBlogs,
   getLikedBlogs,
   createBlog,
+  updateBlog,
   type GetBlogsParams,
 } from "../../lib/api/blog-api"
 import { blogKeys } from "./query-keys"
@@ -73,6 +74,30 @@ export function useCreateBlog() {
       queryClient.invalidateQueries({
         queryKey: blogKeys.all,
       })
+    },
+  })
+}
+
+export function useUpdateBlog() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: updateBlog,
+    onSuccess: (data) => {
+      // Invalidate list queries
+      queryClient.invalidateQueries({
+        queryKey: blogKeys.all,
+      })
+      // Invalidate specific detail queries
+      if (data?.result?.slug) {
+        queryClient.invalidateQueries({
+          queryKey: blogKeys.detail("slug", data.result.slug),
+        })
+      }
+      if (data?.result?.id) {
+        queryClient.invalidateQueries({
+          queryKey: blogKeys.detail("id", data.result.id),
+        })
+      }
     },
   })
 }

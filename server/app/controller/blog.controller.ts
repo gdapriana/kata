@@ -138,4 +138,27 @@ export class BlogController {
       next(e)
     }
   }
+
+  static Update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id
+      const userRole = req.user?.role
+      if (!userId || !userRole) {
+        throw new ResponseError(ErrorResponseMessage.UNAUTHORIZED())
+      }
+
+      const id = req.params.id as string
+      if (!id) {
+        throw new ResponseError(ErrorResponseMessage.BAD_REQUEST("Blog ID is required"))
+      }
+
+      const validatedData = Validation.validate(BlogValidation.Update, req.body)
+
+      const result = await BlogService.Update(id, validatedData, userId, userRole)
+      const response = SuccessResponse.PATCH("blog", result)
+      res.status(response.statusCode).json(response)
+    } catch (e) {
+      next(e)
+    }
+  }
 }

@@ -11,6 +11,7 @@ export class BlogResponse {
     createdAt: true,
     likedCount: true,
     favoriteCount: true,
+    excerpt: true,
     tags: {
       select: {
         id: true,

@@ -36,3 +36,26 @@ export async function getUser(by: "id" | "email", value: string) {
   }
   return res.json()
 }
+
+export interface UpdateProfileData {
+  name?: string
+  image?: string | null
+}
+
+export async function updateProfile(data: UpdateProfileData) {
+  const url = `${SERVER_URL}/api/users/edit`
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || "Failed to update profile")
+  }
+  return res.json()
+}
