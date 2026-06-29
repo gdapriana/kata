@@ -6,10 +6,14 @@ import { Badge } from "@/components/ui/badge"
 export default function BlogCard({ blog }: { blog: any }) {
   return (
     <Link
-      href={`/blogs/${blog.slug}`}
-      className="group mb-4 flex flex-col items-stretch justify-start gap-4 relative"
+      href={`/stories/${blog.slug}`}
+      className="group relative mb-4 flex flex-col items-stretch justify-start gap-4"
     >
-      {blog.status === "DRAFT" && <Badge className="absolute top-3 right-3" variant="destructive">Drafted</Badge>}
+      {blog.status === "DRAFT" && (
+        <Badge className="absolute top-3 right-3" variant="destructive">
+          Drafted
+        </Badge>
+      )}
       {blog?.featuredImage?.url ? (
         <Image
           src={blog.featuredImage.url}

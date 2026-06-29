@@ -1,6 +1,5 @@
 "use client"
 import Trending from "@/app/(root)/_components/trending"
-import React from "react"
 import { useBlogs } from "@/hooks/queries/use-blogs"
 import { Spinner } from "@/components/ui/spinner"
 import BlogCard from "@/components/custom/card/blog"

@@ -28,8 +28,10 @@ export const commentDelete = (
       },
     });
 
-    if (!comment) throw new ResponseError(ErrorResponseMessage.NOT_FOUND("comment"));
-    if (comment.authorId !== userId) throw new ResponseError(ErrorResponseMessage.FORBIDDEN());
+    if (!comment)
+      throw new ResponseError(ErrorResponseMessage.NOT_FOUND("comment"));
+    if (comment.authorId !== userId)
+      throw new ResponseError(ErrorResponseMessage.FORBIDDEN());
 
     return tx.comment.delete({
       where: {

@@ -19,10 +19,12 @@ export class UserValidation {
     sortOrder: z.enum(["asc", "desc"]).default("desc"),
   });
 
-  static Update = z.object({
-    name: z.string().trim().min(1).max(100).optional(),
-    image: z.string().url().or(z.literal("")).optional().nullable(),
-  }).strict();
+  static Update = z
+    .object({
+      name: z.string().trim().min(1).max(100).optional(),
+      image: z.string().url().or(z.literal("")).optional().nullable(),
+    })
+    .strict();
 }
 
 export type UserValidationGetOne = z.infer<typeof UserValidation.GetOne>;

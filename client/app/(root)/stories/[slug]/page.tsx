@@ -28,8 +28,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import StatusState from "@/components/custom/status-state"
 import { Spinner } from "@/components/ui/spinner"
 import Trending from "@/app/(root)/_components/trending"
-import RelatedPost from "@/app/(root)/blogs/[slug]/_components/related"
-import Comment from "@/app/(root)/blogs/[slug]/_components/comment"
+import RelatedPost from "@/app/(root)/stories/[slug]/_components/related"
+import Comment from "@/app/(root)/stories/[slug]/_components/comment"
 
 export default function BlogDetailPage({
   params,
@@ -151,7 +151,6 @@ export default function BlogDetailPage({
   const likesCount = blog.likedCount || 0
   const bookmarksCount = blog.favoriteCount || 0
 
-
   return (
     <main className="px-6 pt-32 pb-24">
       <div className="container">
@@ -267,16 +266,16 @@ export default function BlogDetailPage({
 
               {sessionData && sessionData.user.id === blog.authorId && (
                 <Button
-                asChild
-                variant="ghost"
-                size="icon"
-                className="relative h-8 w-8 rounded-full text-muted-foreground"
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  className="relative h-8 w-8 rounded-full text-muted-foreground"
                   aria-label="Edit"
                 >
                   <Link href={`/blogs/${blog.slug}/edit`}>
-                  <Edit />
+                    <Edit />
                   </Link>
-                  </Button>
+                </Button>
               )}
             </div>
           </div>
@@ -296,14 +295,15 @@ export default function BlogDetailPage({
               )}
 
               {blog.excerpt && (
-                <div className="border-b py-4 mb-4">
-                  <p className="text-sm">
-                  {blog.excerpt}
-                  </p>
+                <div className="mb-4 border-b py-4">
+                  <p className="text-sm">{blog.excerpt}</p>
                 </div>
               )}
 
-              <article dangerouslySetInnerHTML={{__html: blog.content}} className="space-y-6 prose dark:prose-invert text-justify text-sm leading-relaxed whitespace-pre-wrap text-foreground/70"></article>
+              <article
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+                className="prose space-y-6 text-justify text-sm leading-relaxed whitespace-pre-wrap text-foreground/70 dark:prose-invert"
+              ></article>
 
               {blog.tags && blog.tags.length > 0 && (
                 <div className="mt-12 flex flex-wrap gap-2 border-t pt-10">
@@ -321,7 +321,10 @@ export default function BlogDetailPage({
             </div>
             <div className="relative flex flex-col items-stretch justify-start gap-2 md:w-1/3">
               <div className="sticky top-0 flex-col items-stretch justify-start">
-                <RelatedPost categoryId={blog.category.id} />
+                <RelatedPost
+                  categoryId={blog.category.id}
+                  currentBlogId={blog.id}
+                />
                 <Trending />
               </div>
             </div>

@@ -170,7 +170,13 @@ export async function createBlog(data: CreateBlogData) {
 
 export type UpdateBlogData = Partial<CreateBlogData>
 
-export async function updateBlog({ id, data }: { id: string; data: UpdateBlogData }) {
+export async function updateBlog({
+  id,
+  data,
+}: {
+  id: string
+  data: UpdateBlogData
+}) {
   const url = `${SERVER_URL}/api/blogs/${id}`
   const res = await fetch(url, {
     method: "PATCH",

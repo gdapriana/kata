@@ -14,7 +14,7 @@ import { Prisma } from "../../generated/prisma/client.js";
 export const blogGetAll = (
   data: BlogValidationGetAll,
   userId?: string,
-  extraWhere?: Prisma.BlogWhereInput
+  extraWhere?: Prisma.BlogWhereInput,
 ): Promise<{
   query: (BlogGetAllResponseType & { liked?: boolean; bookmarked?: boolean })[];
   pagination: Pagination;
@@ -90,7 +90,10 @@ export const blogGetAll = (
     const hasNext = validatedData.page < totalPages;
     const hasPrev = validatedData.page > 1;
 
-    let queryResult = blogs as (BlogGetAllResponseType & { liked?: boolean; bookmarked?: boolean })[];
+    let queryResult = blogs as (BlogGetAllResponseType & {
+      liked?: boolean;
+      bookmarked?: boolean;
+    })[];
 
     if (userId && blogs.length > 0) {
       const likedBlogs = await tx.blog.findMany({

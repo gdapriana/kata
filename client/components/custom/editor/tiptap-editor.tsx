@@ -55,7 +55,8 @@ export default function TiptapEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-indigo-600 dark:text-indigo-400 underline cursor-pointer",
+          class:
+            "text-indigo-600 dark:text-indigo-400 underline cursor-pointer",
         },
       }),
       TextAlign.configure({
@@ -73,7 +74,8 @@ export default function TiptapEditor({
     },
     editorProps: {
       attributes: {
-        class: "tiptap-content focus:outline-none min-h-[300px] md:min-h-[450px] p-5 text-base leading-relaxed text-foreground select-text",
+        class:
+          "tiptap-content focus:outline-none min-h-[300px] md:min-h-[450px] p-5 text-base leading-relaxed text-foreground select-text",
       },
     },
   })
@@ -201,7 +203,9 @@ export default function TiptapEditor({
         {/* Headings */}
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
           className={btnClass(editor.isActive("heading", { level: 1 }))}
           title="Heading 1"
         >
@@ -209,7 +213,9 @@ export default function TiptapEditor({
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
           className={btnClass(editor.isActive("heading", { level: 2 }))}
           title="Heading 2"
         >
@@ -217,7 +223,9 @@ export default function TiptapEditor({
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
           className={btnClass(editor.isActive("heading", { level: 3 }))}
           title="Heading 3"
         >
@@ -367,7 +375,10 @@ export default function TiptapEditor({
           type="button"
           onClick={() => editor.chain().focus().unsetLink().run()}
           disabled={!editor.isActive("link")}
-          className={btnClass(false) + " disabled:opacity-30 disabled:pointer-events-none"}
+          className={
+            btnClass(false) +
+            " disabled:pointer-events-none disabled:opacity-30"
+          }
           title="Remove Link"
         >
           <Unlink size={16} />
@@ -380,7 +391,10 @@ export default function TiptapEditor({
           type="button"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
-          className={btnClass(false) + " disabled:opacity-30 disabled:pointer-events-none"}
+          className={
+            btnClass(false) +
+            " disabled:pointer-events-none disabled:opacity-30"
+          }
           title="Undo"
         >
           <Undo size={16} />
@@ -389,7 +403,10 @@ export default function TiptapEditor({
           type="button"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
-          className={btnClass(false) + " disabled:opacity-30 disabled:pointer-events-none"}
+          className={
+            btnClass(false) +
+            " disabled:pointer-events-none disabled:opacity-30"
+          }
           title="Redo"
         >
           <Redo size={16} />

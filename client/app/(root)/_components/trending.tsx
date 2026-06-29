@@ -26,7 +26,7 @@ export default function Trending() {
           blogs &&
           blogs?.result?.query?.map((blog: any, idx: number) => (
             <Link
-              href={`/blogs/${blog.slug}`}
+              href={`/stories/${blog.slug}`}
               className="flex items-center justify-start gap-2 rounded-lg p-2 hover:bg-primary/5"
               key={idx}
             >

@@ -2,7 +2,10 @@ import { type Request, type Response, type NextFunction } from "express";
 import type { UserGetOneResponseType } from "../helpers/responses/user.response.js";
 import { UserService } from "../services/user.service.js";
 import { SuccessResponse } from "../helpers/responses/success.response.js";
-import { ResponseError, ErrorResponseMessage } from "../helpers/responses/error.response.js";
+import {
+  ResponseError,
+  ErrorResponseMessage,
+} from "../helpers/responses/error.response.js";
 import { Validation } from "../validation/validation.js";
 import { UserValidation } from "../validation/user.validation.js";
 
@@ -36,7 +39,10 @@ export class UserController {
         throw new ResponseError(ErrorResponseMessage.UNAUTHORIZED());
       }
 
-      const validatedData = Validation.validate(UserValidation.Update, req.body);
+      const validatedData = Validation.validate(
+        UserValidation.Update,
+        req.body,
+      );
 
       const result = await UserService.Update(userId, validatedData);
       const response = SuccessResponse.PATCH("user", result);

@@ -32,7 +32,9 @@ export class CommentService {
     return commentCreate(data);
   };
 
-  static Delete = async (data: CommentValidationDelete): Promise<CommentDeleteResponseType> => {
+  static Delete = async (
+    data: CommentValidationDelete,
+  ): Promise<CommentDeleteResponseType> => {
     return commentDelete(data);
   };
 }

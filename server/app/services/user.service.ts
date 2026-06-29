@@ -25,17 +25,14 @@ export class UserService {
     return userGetAll(data);
   };
 
-  static Update = async (
-    id: string,
-    data: UserValidationUpdate
-  ) => {
+  static Update = async (id: string, data: UserValidationUpdate) => {
     const user = await prismaClient.user.update({
       where: { id },
       data: {
         name: data.name,
         image: data.image,
       },
-    })
-    return user
-  }
+    });
+    return user;
+  };
 }

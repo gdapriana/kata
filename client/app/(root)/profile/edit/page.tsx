@@ -14,7 +14,8 @@ import Link from "next/link"
 
 export default function EditProfilePage() {
   const router = useRouter()
-  const { data: sessionData, isPending: isSessionPending } = authClient.useSession()
+  const { data: sessionData, isPending: isSessionPending } =
+    authClient.useSession()
 
   // Form States
   const [name, setName] = useState("")
@@ -96,7 +97,7 @@ export default function EditProfilePage() {
   const user = sessionData.user
 
   return (
-    <main className="p-6 pt-36 pb-24 min-h-svh bg-linear-to-b from-background via-muted/5 to-muted/20">
+    <main className="min-h-svh bg-linear-to-b from-background via-muted/5 to-muted/20 p-6 pt-36 pb-24">
       <div className="container max-w-2xl">
         <div className="flex flex-col gap-6">
           {/* Back button */}
@@ -105,7 +106,7 @@ export default function EditProfilePage() {
               asChild
               variant="ghost"
               size="sm"
-              className="text-xs flex items-center gap-1 text-muted-foreground hover:text-foreground"
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
             >
               <Link href="/profile">
                 <ArrowLeft size={14} /> Back to Profile
@@ -113,32 +114,42 @@ export default function EditProfilePage() {
             </Button>
           </div>
 
-          <div className="rounded-xl border bg-card text-card-foreground shadow-xs p-6 md:p-8">
-            <div className="border-b pb-4 mb-6">
-              <h1 className="text-2xl font-serif font-black tracking-tight">Edit Profile</h1>
-              <p className="text-xs text-muted-foreground mt-1">Manage your public display settings and details.</p>
+          <div className="rounded-xl border bg-card p-6 text-card-foreground shadow-xs md:p-8">
+            <div className="mb-6 border-b pb-4">
+              <h1 className="font-serif text-2xl font-black tracking-tight">
+                Edit Profile
+              </h1>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Manage your public display settings and details.
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-8">
               {/* Profile Image Section */}
               <div className="flex flex-col items-center justify-center gap-4">
-                <div className="relative group cursor-pointer overflow-hidden rounded-full border shadow-xs h-28 w-28">
+                <div className="group relative h-28 w-28 cursor-pointer overflow-hidden rounded-full border shadow-xs">
                   <Avatar className="h-full w-full">
-                    <AvatarImage src={imageUrl || ""} alt={name} className="object-cover" />
+                    <AvatarImage
+                      src={imageUrl || ""}
+                      alt={name}
+                      className="object-cover"
+                    />
                     <AvatarFallback className="bg-muted">
                       <User className="h-10 w-10 text-muted-foreground" />
                     </AvatarFallback>
                   </Avatar>
-                  
+
                   {/* Hover Upload Trigger */}
-                  <label 
+                  <label
                     htmlFor="avatar-input"
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer select-none"
+                    className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center bg-black/60 text-white opacity-0 transition-opacity select-none group-hover:opacity-100"
                   >
                     <Camera size={20} className="mb-1" />
-                    <span className="text-[10px] font-semibold uppercase tracking-wider">Change</span>
+                    <span className="text-[10px] font-semibold tracking-wider uppercase">
+                      Change
+                    </span>
                   </label>
-                  <input 
+                  <input
                     id="avatar-input"
                     type="file"
                     accept="image/*"
@@ -149,11 +160,14 @@ export default function EditProfilePage() {
                 </div>
 
                 {uploadImageMutation.isPending ? (
-                  <span className="text-xs text-muted-foreground flex items-center gap-1.5 animate-pulse">
-                    <Loader2 size={12} className="animate-spin text-primary" /> Uploading image...
+                  <span className="flex animate-pulse items-center gap-1.5 text-xs text-muted-foreground">
+                    <Loader2 size={12} className="animate-spin text-primary" />{" "}
+                    Uploading image...
                   </span>
                 ) : (
-                  <span className="text-xs text-muted-foreground">Click the photo to edit</span>
+                  <span className="text-xs text-muted-foreground">
+                    Click the photo to edit
+                  </span>
                 )}
               </div>
 
@@ -161,20 +175,29 @@ export default function EditProfilePage() {
               <div className="flex flex-col gap-5">
                 {/* Email (Read Only) */}
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground">Email Address</Label>
+                  <Label
+                    htmlFor="email"
+                    className="text-xs font-semibold text-muted-foreground"
+                  >
+                    Email Address
+                  </Label>
                   <Input
                     id="email"
                     type="email"
                     value={user.email}
                     disabled
-                    className="bg-muted/50 cursor-not-allowed select-none text-muted-foreground"
+                    className="cursor-not-allowed bg-muted/50 text-muted-foreground select-none"
                   />
-                  <p className="text-[10px] text-muted-foreground/80">Your registered email address cannot be changed.</p>
+                  <p className="text-[10px] text-muted-foreground/80">
+                    Your registered email address cannot be changed.
+                  </p>
                 </div>
 
                 {/* Display Name */}
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="name" className="text-xs font-semibold">Display Name</Label>
+                  <Label htmlFor="name" className="text-xs font-semibold">
+                    Display Name
+                  </Label>
                   <Input
                     id="name"
                     type="text"
@@ -201,7 +224,10 @@ export default function EditProfilePage() {
                 <Button
                   type="submit"
                   size="sm"
-                  disabled={updateProfileMutation.isPending || uploadImageMutation.isPending}
+                  disabled={
+                    updateProfileMutation.isPending ||
+                    uploadImageMutation.isPending
+                  }
                 >
                   {updateProfileMutation.isPending && (
                     <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
