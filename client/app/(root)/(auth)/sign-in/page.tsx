@@ -75,7 +75,7 @@ export default function Page() {
       setGoogleLoading(true)
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL: typeof window !== "undefined" ? `${window.location.origin}/` : "/",
       })
     } catch (err: any) {
       setError(err?.message || "Failed to sign in with Google.")

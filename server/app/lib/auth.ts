@@ -1,12 +1,14 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prismaClient } from "../database/db.js";
+import { expo } from "@better-auth/expo";
 
 export const auth = betterAuth({
-  trustedOrigins: ["http://localhost:3000", "https://kataclient.vercel.app"],
+  trustedOrigins: ["http://localhost:3000", "https://kataclient.vercel.app", "mobile://"],
   database: prismaAdapter(prismaClient, {
     provider: "postgresql",
   }),
+  plugins: [expo()],
   emailAndPassword: {
     enabled: true,
   },
