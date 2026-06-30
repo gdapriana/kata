@@ -176,7 +176,7 @@ export default function EditBlogPage({
       },
       {
         onSuccess: (data) => {
-          router.push(`/blogs/${data.result.slug}`)
+          router.push(`/stories/${data.result.slug}`)
         },
         onError: (err: any) => {
           alert(err.message || "Failed to update blog post.")
@@ -227,7 +227,7 @@ export default function EditBlogPage({
             Only the original author can edit this post.
           </p>
           <Button asChild>
-            <Link href={`/blogs/${blog.slug}`}>Back to Story</Link>
+            <Link href={`/stories/${blog.slug}`}>Back to Story</Link>
           </Button>
         </div>
       </main>
@@ -247,7 +247,7 @@ export default function EditBlogPage({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => router.push(`/blogs/${blog.slug}`)}
+                onClick={() => router.push(`/stories/${blog.slug}`)}
                 className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft size={14} /> Back to Story
@@ -503,7 +503,7 @@ export default function EditBlogPage({
                 type="button"
                 variant="outline"
                 className="w-full text-xs"
-                onClick={() => router.push(`/blogs/${blog.slug}`)}
+                onClick={() => router.push(`/stories/${blog.slug}`)}
                 disabled={updateBlogMutation.isPending}
               >
                 Cancel

@@ -131,7 +131,7 @@ export default function Page() {
       },
       {
         onSuccess: (data) => {
-          router.push(`/blogs/${data.result.slug}`)
+          router.push(`/stories/${data.result.slug}`)
         },
         onError: (err: any) => {
           alert(

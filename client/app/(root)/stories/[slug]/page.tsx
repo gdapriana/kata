@@ -272,7 +272,7 @@ export default function BlogDetailPage({
                   className="relative h-8 w-8 rounded-full text-muted-foreground"
                   aria-label="Edit"
                 >
-                  <Link href={`/blogs/${blog.slug}/edit`}>
+                  <Link href={`/stories/${blog.slug}/edit`}>
                     <Edit />
                   </Link>
                 </Button>
